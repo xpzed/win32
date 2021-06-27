@@ -4,7 +4,7 @@
 
 // +build windows
 
-package win
+package win32
 
 // Edit styles
 const (

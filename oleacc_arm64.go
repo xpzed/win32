@@ -4,7 +4,7 @@
 
 // +build windows,arm64
 
-package win
+package win32
 
 import (
 	"syscall"

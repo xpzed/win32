@@ -4,7 +4,7 @@
 
 // +build windows
 
-package win
+package win32
 
 // TreeView styles
 const (

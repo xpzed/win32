@@ -4,7 +4,7 @@
 
 // +build windows,386 windows,arm
 
-package win
+package win32
 
 type VARIANT struct {
 	Vt       VARTYPE

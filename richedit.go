@@ -4,7 +4,7 @@
 
 // +build windows
 
-package win
+package win32
 
 const (
 	// NOTE:  MSFTEDIT.DLL only registers MSFTEDIT_CLASS.  If an application wants

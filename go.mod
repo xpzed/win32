@@ -1,4 +1,4 @@
-module github.com/lxn/win
+module github.com/xpzed/win32
 
 go 1.12
 

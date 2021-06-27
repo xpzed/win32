@@ -4,7 +4,7 @@
 
 // +build windows
 
-package win
+package win32
 
 const TCM_FIRST = 0x1300
 const TCN_FIRST = -550

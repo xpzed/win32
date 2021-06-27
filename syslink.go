@@ -4,7 +4,7 @@
 
 // +build windows
 
-package win
+package win32
 
 const (
 	INVALID_LINK_INDEX = -1

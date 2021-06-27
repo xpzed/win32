@@ -1200,26 +1200,26 @@ func init() {
 	transparentBlt = libmsimg32.NewProc("TransparentBlt")
 }
 
-func AbortDoc(hdc HDC) int32 {
-	ret, _, _ := syscall.Syscall(abortDoc.Addr(), 1,
+func AbortDoc(hdc HDC) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(abortDoc.Addr(), 1,
 		uintptr(hdc),
 		0,
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func AddFontResourceEx(lpszFilename *uint16, fl uint32, pdv unsafe.Pointer) int32 {
-	ret, _, _ := syscall.Syscall(addFontResourceEx.Addr(), 3,
+func AddFontResourceEx(lpszFilename *uint16, fl uint32, pdv unsafe.Pointer) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(addFontResourceEx.Addr(), 3,
 		uintptr(unsafe.Pointer(lpszFilename)),
 		uintptr(fl),
 		uintptr(pdv))
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func AddFontMemResourceEx(pFileView uintptr, cjSize uint32, pvReserved unsafe.Pointer, pNumFonts *uint32) HANDLE {
-	ret, _, _ := syscall.Syscall6(addFontMemResourceEx.Addr(), 4,
+func AddFontMemResourceEx(pFileView uintptr, cjSize uint32, pvReserved unsafe.Pointer, pNumFonts *uint32) (HANDLE, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(addFontMemResourceEx.Addr(), 4,
 		pFileView,
 		uintptr(cjSize),
 		uintptr(pvReserved),
@@ -1227,11 +1227,11 @@ func AddFontMemResourceEx(pFileView uintptr, cjSize uint32, pvReserved unsafe.Po
 		0,
 		0)
 
-	return HANDLE(ret)
+	return HANDLE(ret), err
 }
 
-func AlphaBlend(hdcDest HDC, nXOriginDest, nYOriginDest, nWidthDest, nHeightDest int32, hdcSrc HDC, nXOriginSrc, nYOriginSrc, nWidthSrc, nHeightSrc int32, ftn BLENDFUNCTION) bool {
-	ret, _, _ := syscall.Syscall12(alphaBlend.Addr(), 11,
+func AlphaBlend(hdcDest HDC, nXOriginDest, nYOriginDest, nWidthDest, nHeightDest int32, hdcSrc HDC, nXOriginSrc, nYOriginSrc, nWidthSrc, nHeightSrc int32, ftn BLENDFUNCTION) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall12(alphaBlend.Addr(), 11,
 		uintptr(hdcDest),
 		uintptr(nXOriginDest),
 		uintptr(nYOriginDest),
@@ -1245,11 +1245,11 @@ func AlphaBlend(hdcDest HDC, nXOriginDest, nYOriginDest, nWidthDest, nHeightDest
 		uintptr(*(*uint32)(unsafe.Pointer(uintptr(unsafe.Pointer(&ftn))))),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func BitBlt(hdcDest HDC, nXDest, nYDest, nWidth, nHeight int32, hdcSrc HDC, nXSrc, nYSrc int32, dwRop uint32) bool {
-	ret, _, _ := syscall.Syscall9(bitBlt.Addr(), 9,
+func BitBlt(hdcDest HDC, nXDest, nYDest, nWidth, nHeight int32, hdcSrc HDC, nXSrc, nYSrc int32, dwRop uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall9(bitBlt.Addr(), 9,
 		uintptr(hdcDest),
 		uintptr(nXDest),
 		uintptr(nYDest),
@@ -1260,29 +1260,29 @@ func BitBlt(hdcDest HDC, nXDest, nYDest, nWidth, nHeight int32, hdcSrc HDC, nXSr
 		uintptr(nYSrc),
 		uintptr(dwRop))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func ChoosePixelFormat(hdc HDC, ppfd *PIXELFORMATDESCRIPTOR) int32 {
-	ret, _, _ := syscall.Syscall(choosePixelFormat.Addr(), 2,
+func ChoosePixelFormat(hdc HDC, ppfd *PIXELFORMATDESCRIPTOR) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(choosePixelFormat.Addr(), 2,
 		uintptr(hdc),
 		uintptr(unsafe.Pointer(ppfd)),
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func CloseEnhMetaFile(hdc HDC) HENHMETAFILE {
-	ret, _, _ := syscall.Syscall(closeEnhMetaFile.Addr(), 1,
+func CloseEnhMetaFile(hdc HDC) (HENHMETAFILE, syscall.Errno) {
+	ret, _, err := syscall.Syscall(closeEnhMetaFile.Addr(), 1,
 		uintptr(hdc),
 		0,
 		0)
 
-	return HENHMETAFILE(ret)
+	return HENHMETAFILE(ret), err
 }
 
-func CombineRgn(hrgnDest, hrgnSrc1, hrgnSrc2 HRGN, fnCombineMode int32) int32 {
-	ret, _, _ := syscall.Syscall6(combineRgn.Addr(), 4,
+func CombineRgn(hrgnDest, hrgnSrc1, hrgnSrc2 HRGN, fnCombineMode int32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(combineRgn.Addr(), 4,
 		uintptr(hrgnDest),
 		uintptr(hrgnSrc1),
 		uintptr(hrgnSrc2),
@@ -1290,20 +1290,20 @@ func CombineRgn(hrgnDest, hrgnSrc1, hrgnSrc2 HRGN, fnCombineMode int32) int32 {
 		0,
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func CopyEnhMetaFile(hemfSrc HENHMETAFILE, lpszFile *uint16) HENHMETAFILE {
-	ret, _, _ := syscall.Syscall(copyEnhMetaFile.Addr(), 2,
+func CopyEnhMetaFile(hemfSrc HENHMETAFILE, lpszFile *uint16) (HENHMETAFILE, syscall.Errno) {
+	ret, _, err := syscall.Syscall(copyEnhMetaFile.Addr(), 2,
 		uintptr(hemfSrc),
 		uintptr(unsafe.Pointer(lpszFile)),
 		0)
 
-	return HENHMETAFILE(ret)
+	return HENHMETAFILE(ret), err
 }
 
-func CreateBitmap(nWidth, nHeight int32, cPlanes, cBitsPerPel uint32, lpvBits unsafe.Pointer) HBITMAP {
-	ret, _, _ := syscall.Syscall6(createBitmap.Addr(), 5,
+func CreateBitmap(nWidth, nHeight int32, cPlanes, cBitsPerPel uint32, lpvBits unsafe.Pointer) (HBITMAP, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(createBitmap.Addr(), 5,
 		uintptr(nWidth),
 		uintptr(nHeight),
 		uintptr(cPlanes),
@@ -1311,38 +1311,38 @@ func CreateBitmap(nWidth, nHeight int32, cPlanes, cBitsPerPel uint32, lpvBits un
 		uintptr(lpvBits),
 		0)
 
-	return HBITMAP(ret)
+	return HBITMAP(ret), err
 }
 
-func CreateCompatibleBitmap(hdc HDC, nWidth, nHeight int32) HBITMAP {
-	ret, _, _ := syscall.Syscall(createCompatibleBitmap.Addr(), 3,
+func CreateCompatibleBitmap(hdc HDC, nWidth, nHeight int32) (HBITMAP, syscall.Errno) {
+	ret, _, err := syscall.Syscall(createCompatibleBitmap.Addr(), 3,
 		uintptr(hdc),
 		uintptr(nWidth),
 		uintptr(nHeight))
 
-	return HBITMAP(ret)
+	return HBITMAP(ret), err
 }
 
-func CreateBrushIndirect(lplb *LOGBRUSH) HBRUSH {
-	ret, _, _ := syscall.Syscall(createBrushIndirect.Addr(), 1,
+func CreateBrushIndirect(lplb *LOGBRUSH) (HBRUSH, syscall.Errno) {
+	ret, _, err := syscall.Syscall(createBrushIndirect.Addr(), 1,
 		uintptr(unsafe.Pointer(lplb)),
 		0,
 		0)
 
-	return HBRUSH(ret)
+	return HBRUSH(ret), err
 }
 
-func CreateCompatibleDC(hdc HDC) HDC {
-	ret, _, _ := syscall.Syscall(createCompatibleDC.Addr(), 1,
+func CreateCompatibleDC(hdc HDC) (HDC, syscall.Errno) {
+	ret, _, err := syscall.Syscall(createCompatibleDC.Addr(), 1,
 		uintptr(hdc),
 		0,
 		0)
 
-	return HDC(ret)
+	return HDC(ret), err
 }
 
-func CreateDC(lpszDriver, lpszDevice, lpszOutput *uint16, lpInitData *DEVMODE) HDC {
-	ret, _, _ := syscall.Syscall6(createDC.Addr(), 4,
+func CreateDC(lpszDriver, lpszDevice, lpszOutput *uint16, lpInitData *DEVMODE) (HDC, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(createDC.Addr(), 4,
 		uintptr(unsafe.Pointer(lpszDriver)),
 		uintptr(unsafe.Pointer(lpszDevice)),
 		uintptr(unsafe.Pointer(lpszOutput)),
@@ -1350,11 +1350,11 @@ func CreateDC(lpszDriver, lpszDevice, lpszOutput *uint16, lpInitData *DEVMODE) H
 		0,
 		0)
 
-	return HDC(ret)
+	return HDC(ret), err
 }
 
-func CreateDIBSection(hdc HDC, pbmih *BITMAPINFOHEADER, iUsage uint32, ppvBits *unsafe.Pointer, hSection HANDLE, dwOffset uint32) HBITMAP {
-	ret, _, _ := syscall.Syscall6(createDIBSection.Addr(), 6,
+func CreateDIBSection(hdc HDC, pbmih *BITMAPINFOHEADER, iUsage uint32, ppvBits *unsafe.Pointer, hSection HANDLE, dwOffset uint32) (HBITMAP, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(createDIBSection.Addr(), 6,
 		uintptr(hdc),
 		uintptr(unsafe.Pointer(pbmih)),
 		uintptr(iUsage),
@@ -1362,11 +1362,11 @@ func CreateDIBSection(hdc HDC, pbmih *BITMAPINFOHEADER, iUsage uint32, ppvBits *
 		uintptr(hSection),
 		uintptr(dwOffset))
 
-	return HBITMAP(ret)
+	return HBITMAP(ret), err
 }
 
-func CreateEnhMetaFile(hdcRef HDC, lpFilename *uint16, lpRect *RECT, lpDescription *uint16) HDC {
-	ret, _, _ := syscall.Syscall6(createEnhMetaFile.Addr(), 4,
+func CreateEnhMetaFile(hdcRef HDC, lpFilename *uint16, lpRect *RECT, lpDescription *uint16) (HDC, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(createEnhMetaFile.Addr(), 4,
 		uintptr(hdcRef),
 		uintptr(unsafe.Pointer(lpFilename)),
 		uintptr(unsafe.Pointer(lpRect)),
@@ -1374,20 +1374,20 @@ func CreateEnhMetaFile(hdcRef HDC, lpFilename *uint16, lpRect *RECT, lpDescripti
 		0,
 		0)
 
-	return HDC(ret)
+	return HDC(ret), err
 }
 
-func CreateFontIndirect(lplf *LOGFONT) HFONT {
-	ret, _, _ := syscall.Syscall(createFontIndirect.Addr(), 1,
+func CreateFontIndirect(lplf *LOGFONT) (HFONT, syscall.Errno) {
+	ret, _, err := syscall.Syscall(createFontIndirect.Addr(), 1,
 		uintptr(unsafe.Pointer(lplf)),
 		0,
 		0)
 
-	return HFONT(ret)
+	return HFONT(ret), err
 }
 
-func CreateIC(lpszDriver, lpszDevice, lpszOutput *uint16, lpdvmInit *DEVMODE) HDC {
-	ret, _, _ := syscall.Syscall6(createIC.Addr(), 4,
+func CreateIC(lpszDriver, lpszDevice, lpszOutput *uint16, lpdvmInit *DEVMODE) (HDC, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(createIC.Addr(), 4,
 		uintptr(unsafe.Pointer(lpszDriver)),
 		uintptr(unsafe.Pointer(lpszDevice)),
 		uintptr(unsafe.Pointer(lpszOutput)),
@@ -1395,20 +1395,20 @@ func CreateIC(lpszDriver, lpszDevice, lpszOutput *uint16, lpdvmInit *DEVMODE) HD
 		0,
 		0)
 
-	return HDC(ret)
+	return HDC(ret), err
 }
 
-func CreatePatternBrush(hbmp HBITMAP) HBRUSH {
-	ret, _, _ := syscall.Syscall(createPatternBrush.Addr(), 1,
+func CreatePatternBrush(hbmp HBITMAP) (HBRUSH, syscall.Errno) {
+	ret, _, err := syscall.Syscall(createPatternBrush.Addr(), 1,
 		uintptr(hbmp),
 		0,
 		0)
 
-	return HBRUSH(ret)
+	return HBRUSH(ret), err
 }
 
-func CreateRectRgn(nLeftRect, nTopRect, nRightRect, nBottomRect int32) HRGN {
-	ret, _, _ := syscall.Syscall6(createRectRgn.Addr(), 4,
+func CreateRectRgn(nLeftRect, nTopRect, nRightRect, nBottomRect int32) (HRGN, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(createRectRgn.Addr(), 4,
 		uintptr(nLeftRect),
 		uintptr(nTopRect),
 		uintptr(nRightRect),
@@ -1416,38 +1416,38 @@ func CreateRectRgn(nLeftRect, nTopRect, nRightRect, nBottomRect int32) HRGN {
 		0,
 		0)
 
-	return HRGN(ret)
+	return HRGN(ret), err
 }
 
-func DeleteDC(hdc HDC) bool {
-	ret, _, _ := syscall.Syscall(deleteDC.Addr(), 1,
+func DeleteDC(hdc HDC) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(deleteDC.Addr(), 1,
 		uintptr(hdc),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func DeleteEnhMetaFile(hemf HENHMETAFILE) bool {
-	ret, _, _ := syscall.Syscall(deleteEnhMetaFile.Addr(), 1,
+func DeleteEnhMetaFile(hemf HENHMETAFILE) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(deleteEnhMetaFile.Addr(), 1,
 		uintptr(hemf),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func DeleteObject(hObject HGDIOBJ) bool {
-	ret, _, _ := syscall.Syscall(deleteObject.Addr(), 1,
+func DeleteObject(hObject HGDIOBJ) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(deleteObject.Addr(), 1,
 		uintptr(hObject),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func Ellipse(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect int32) bool {
-	ret, _, _ := syscall.Syscall6(ellipse.Addr(), 5,
+func Ellipse(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect int32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(ellipse.Addr(), 5,
 		uintptr(hdc),
 		uintptr(nLeftRect),
 		uintptr(nTopRect),
@@ -1455,29 +1455,29 @@ func Ellipse(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect int32) bool {
 		uintptr(nBottomRect),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func EndDoc(hdc HDC) int32 {
-	ret, _, _ := syscall.Syscall(endDoc.Addr(), 1,
+func EndDoc(hdc HDC) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(endDoc.Addr(), 1,
 		uintptr(hdc),
 		0,
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func EndPage(hdc HDC) int32 {
-	ret, _, _ := syscall.Syscall(endPage.Addr(), 1,
+func EndPage(hdc HDC) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(endPage.Addr(), 1,
 		uintptr(hdc),
 		0,
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func ExcludeClipRect(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect int32) int32 {
-	ret, _, _ := syscall.Syscall6(excludeClipRect.Addr(), 5,
+func ExcludeClipRect(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect int32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(excludeClipRect.Addr(), 5,
 		uintptr(hdc),
 		uintptr(nLeftRect),
 		uintptr(nTopRect),
@@ -1485,11 +1485,11 @@ func ExcludeClipRect(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect int32
 		uintptr(nBottomRect),
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func ExtCreatePen(dwPenStyle, dwWidth uint32, lplb *LOGBRUSH, dwStyleCount uint32, lpStyle *uint32) HPEN {
-	ret, _, _ := syscall.Syscall6(extCreatePen.Addr(), 5,
+func ExtCreatePen(dwPenStyle, dwWidth uint32, lplb *LOGBRUSH, dwStyleCount uint32, lpStyle *uint32) (HPEN, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(extCreatePen.Addr(), 5,
 		uintptr(dwPenStyle),
 		uintptr(dwWidth),
 		uintptr(unsafe.Pointer(lplb)),
@@ -1497,47 +1497,47 @@ func ExtCreatePen(dwPenStyle, dwWidth uint32, lplb *LOGBRUSH, dwStyleCount uint3
 		uintptr(unsafe.Pointer(lpStyle)),
 		0)
 
-	return HPEN(ret)
+	return HPEN(ret), err
 }
 
-func FillRgn(hdc HDC, hrgn HRGN, hbr HBRUSH) bool {
-	ret, _, _ := syscall.Syscall(fillRgn.Addr(), 3,
+func FillRgn(hdc HDC, hrgn HRGN, hbr HBRUSH) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(fillRgn.Addr(), 3,
 		uintptr(hdc),
 		uintptr(hrgn),
 		uintptr(hbr))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GdiFlush() bool {
-	ret, _, _ := syscall.Syscall(gdiFlush.Addr(), 0,
+func GdiFlush() (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(gdiFlush.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetBkColor(hdc HDC) COLORREF {
-	ret, _, _ := syscall.Syscall(getBkColor.Addr(), 1,
+func GetBkColor(hdc HDC) (COLORREF, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getBkColor.Addr(), 1,
 		uintptr(hdc),
 		0,
 		0)
 
-	return COLORREF(ret)
+	return COLORREF(ret), err
 }
 
-func GetDeviceCaps(hdc HDC, nIndex int32) int32 {
-	ret, _, _ := syscall.Syscall(getDeviceCaps.Addr(), 2,
+func GetDeviceCaps(hdc HDC, nIndex int32) (int32, syscall.Errno)  {
+	ret, _, err := syscall.Syscall(getDeviceCaps.Addr(), 2,
 		uintptr(hdc),
 		uintptr(nIndex),
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func GetDIBits(hdc HDC, hbmp HBITMAP, uStartScan uint32, cScanLines uint32, lpvBits *byte, lpbi *BITMAPINFO, uUsage uint32) int32 {
-	ret, _, _ := syscall.Syscall9(getDIBits.Addr(), 7,
+func GetDIBits(hdc HDC, hbmp HBITMAP, uStartScan uint32, cScanLines uint32, lpvBits *byte, lpbi *BITMAPINFO, uUsage uint32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall9(getDIBits.Addr(), 7,
 		uintptr(hdc),
 		uintptr(hbmp),
 		uintptr(uStartScan),
@@ -1547,74 +1547,74 @@ func GetDIBits(hdc HDC, hbmp HBITMAP, uStartScan uint32, cScanLines uint32, lpvB
 		uintptr(uUsage),
 		0,
 		0)
-	return int32(ret)
+	return int32(ret), err
 }
 
-func GetEnhMetaFile(lpszMetaFile *uint16) HENHMETAFILE {
-	ret, _, _ := syscall.Syscall(getEnhMetaFile.Addr(), 1,
+func GetEnhMetaFile(lpszMetaFile *uint16) (HENHMETAFILE, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getEnhMetaFile.Addr(), 1,
 		uintptr(unsafe.Pointer(lpszMetaFile)),
 		0,
 		0)
 
-	return HENHMETAFILE(ret)
+	return HENHMETAFILE(ret), err
 }
 
-func GetEnhMetaFileHeader(hemf HENHMETAFILE, cbBuffer uint32, lpemh *ENHMETAHEADER) uint32 {
-	ret, _, _ := syscall.Syscall(getEnhMetaFileHeader.Addr(), 3,
+func GetEnhMetaFileHeader(hemf HENHMETAFILE, cbBuffer uint32, lpemh *ENHMETAHEADER) (uint32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getEnhMetaFileHeader.Addr(), 3,
 		uintptr(hemf),
 		uintptr(cbBuffer),
 		uintptr(unsafe.Pointer(lpemh)))
 
-	return uint32(ret)
+	return uint32(ret), err
 }
 
-func GetObject(hgdiobj HGDIOBJ, cbBuffer uintptr, lpvObject unsafe.Pointer) int32 {
-	ret, _, _ := syscall.Syscall(getObject.Addr(), 3,
+func GetObject(hgdiobj HGDIOBJ, cbBuffer uintptr, lpvObject unsafe.Pointer) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getObject.Addr(), 3,
 		uintptr(hgdiobj),
 		uintptr(cbBuffer),
 		uintptr(lpvObject))
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func GetPixel(hdc HDC, nXPos, nYPos int32) COLORREF {
-	ret, _, _ := syscall.Syscall(getPixel.Addr(), 3,
+func GetPixel(hdc HDC, nXPos, nYPos int32) (COLORREF, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getPixel.Addr(), 3,
 		uintptr(hdc),
 		uintptr(nXPos),
 		uintptr(nYPos))
 
-	return COLORREF(ret)
+	return COLORREF(ret), err
 }
 
-func GetRgnBox(hrgn HRGN, lprc *RECT) int32 {
-	ret, _, _ := syscall.Syscall(getRgnBox.Addr(), 2,
+func GetRgnBox(hrgn HRGN, lprc *RECT) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getRgnBox.Addr(), 2,
 		uintptr(hrgn),
 		uintptr(unsafe.Pointer(lprc)),
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func GetStockObject(fnObject int32) HGDIOBJ {
-	ret, _, _ := syscall.Syscall(getStockObject.Addr(), 1,
+func GetStockObject(fnObject int32) (HGDIOBJ, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getStockObject.Addr(), 1,
 		uintptr(fnObject),
 		0,
 		0)
 
-	return HGDIOBJ(ret)
+	return HGDIOBJ(ret), err
 }
 
-func GetTextColor(hdc HDC) COLORREF {
-	ret, _, _ := syscall.Syscall(getTextColor.Addr(), 1,
+func GetTextColor(hdc HDC) (COLORREF, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getTextColor.Addr(), 1,
 		uintptr(hdc),
 		0,
 		0)
 
-	return COLORREF(ret)
+	return COLORREF(ret), err
 }
 
-func GetTextExtentExPoint(hdc HDC, lpszStr *uint16, cchString, nMaxExtent int32, lpnFit, alpDx *int32, lpSize *SIZE) bool {
-	ret, _, _ := syscall.Syscall9(getTextExtentExPoint.Addr(), 7,
+func GetTextExtentExPoint(hdc HDC, lpszStr *uint16, cchString, nMaxExtent int32, lpnFit, alpDx *int32, lpSize *SIZE) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall9(getTextExtentExPoint.Addr(), 7,
 		uintptr(hdc),
 		uintptr(unsafe.Pointer(lpszStr)),
 		uintptr(cchString),
@@ -1625,11 +1625,11 @@ func GetTextExtentExPoint(hdc HDC, lpszStr *uint16, cchString, nMaxExtent int32,
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetTextExtentPoint32(hdc HDC, lpString *uint16, c int32, lpSize *SIZE) bool {
-	ret, _, _ := syscall.Syscall6(getTextExtentPoint32.Addr(), 4,
+func GetTextExtentPoint32(hdc HDC, lpString *uint16, c int32, lpSize *SIZE) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(getTextExtentPoint32.Addr(), 4,
 		uintptr(hdc),
 		uintptr(unsafe.Pointer(lpString)),
 		uintptr(c),
@@ -1637,29 +1637,29 @@ func GetTextExtentPoint32(hdc HDC, lpString *uint16, c int32, lpSize *SIZE) bool
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetTextMetrics(hdc HDC, lptm *TEXTMETRIC) bool {
-	ret, _, _ := syscall.Syscall(getTextMetrics.Addr(), 2,
+func GetTextMetrics(hdc HDC, lptm *TEXTMETRIC) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getTextMetrics.Addr(), 2,
 		uintptr(hdc),
 		uintptr(unsafe.Pointer(lptm)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetViewportOrgEx(hdc HDC, lpPoint *POINT) bool {
-	ret, _, _ := syscall.Syscall(getViewportOrgEx.Addr(), 2,
+func GetViewportOrgEx(hdc HDC, lpPoint *POINT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getViewportOrgEx.Addr(), 2,
 		uintptr(hdc),
 		uintptr(unsafe.Pointer(lpPoint)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GradientFill(hdc HDC, pVertex *TRIVERTEX, nVertex uint32, pMesh unsafe.Pointer, nMesh, ulMode uint32) bool {
-	ret, _, _ := syscall.Syscall6(gradientFill.Addr(), 6,
+func GradientFill(hdc HDC, pVertex *TRIVERTEX, nVertex uint32, pMesh unsafe.Pointer, nMesh, ulMode uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(gradientFill.Addr(), 6,
 		uintptr(hdc),
 		uintptr(unsafe.Pointer(pVertex)),
 		uintptr(nVertex),
@@ -1667,11 +1667,11 @@ func GradientFill(hdc HDC, pVertex *TRIVERTEX, nVertex uint32, pMesh unsafe.Poin
 		uintptr(nMesh),
 		uintptr(ulMode))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func IntersectClipRect(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect int32) int32 {
-	ret, _, _ := syscall.Syscall6(intersectClipRect.Addr(), 5,
+func IntersectClipRect(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect int32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(intersectClipRect.Addr(), 5,
 		uintptr(hdc),
 		uintptr(nLeftRect),
 		uintptr(nTopRect),
@@ -1679,20 +1679,20 @@ func IntersectClipRect(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect int
 		uintptr(nBottomRect),
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func LineTo(hdc HDC, nXEnd, nYEnd int32) bool {
-	ret, _, _ := syscall.Syscall(lineTo.Addr(), 3,
+func LineTo(hdc HDC, nXEnd, nYEnd int32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(lineTo.Addr(), 3,
 		uintptr(hdc),
 		uintptr(nXEnd),
 		uintptr(nYEnd))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func MoveToEx(hdc HDC, x, y int, lpPoint *POINT) bool {
-	ret, _, _ := syscall.Syscall6(moveToEx.Addr(), 4,
+func MoveToEx(hdc HDC, x, y int, lpPoint *POINT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(moveToEx.Addr(), 4,
 		uintptr(hdc),
 		uintptr(x),
 		uintptr(y),
@@ -1700,29 +1700,29 @@ func MoveToEx(hdc HDC, x, y int, lpPoint *POINT) bool {
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func PlayEnhMetaFile(hdc HDC, hemf HENHMETAFILE, lpRect *RECT) bool {
-	ret, _, _ := syscall.Syscall(playEnhMetaFile.Addr(), 3,
+func PlayEnhMetaFile(hdc HDC, hemf HENHMETAFILE, lpRect *RECT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(playEnhMetaFile.Addr(), 3,
 		uintptr(hdc),
 		uintptr(hemf),
 		uintptr(unsafe.Pointer(lpRect)))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func Polyline(hdc HDC, lppt unsafe.Pointer, cPoints int32) bool {
-	ret, _, _ := syscall.Syscall(polyline.Addr(), 3,
+func Polyline(hdc HDC, lppt unsafe.Pointer, cPoints int32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(polyline.Addr(), 3,
 		uintptr(hdc),
 		uintptr(lppt),
 		uintptr(cPoints))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func Rectangle_(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect int32) bool {
-	ret, _, _ := syscall.Syscall6(rectangle.Addr(), 5,
+func Rectangle_(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect int32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(rectangle.Addr(), 5,
 		uintptr(hdc),
 		uintptr(nLeftRect),
 		uintptr(nTopRect),
@@ -1730,46 +1730,46 @@ func Rectangle_(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect int32) boo
 		uintptr(nBottomRect),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func RemoveFontResourceEx(lpszFilename *uint16, fl uint32, pdv unsafe.Pointer) bool {
-	ret, _, _ := syscall.Syscall(removeFontResourceEx.Addr(), 3,
+func RemoveFontResourceEx(lpszFilename *uint16, fl uint32, pdv unsafe.Pointer) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(removeFontResourceEx.Addr(), 3,
 		uintptr(unsafe.Pointer(lpszFilename)),
 		uintptr(fl),
 		uintptr(pdv))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func RemoveFontMemResourceEx(h HANDLE) bool {
-	ret, _, _ := syscall.Syscall(removeFontMemResourceEx.Addr(), 1,
+func RemoveFontMemResourceEx(h HANDLE) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(removeFontMemResourceEx.Addr(), 1,
 		uintptr(h),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func ResetDC(hdc HDC, lpInitData *DEVMODE) HDC {
-	ret, _, _ := syscall.Syscall(resetDC.Addr(), 2,
+func ResetDC(hdc HDC, lpInitData *DEVMODE) (HDC, syscall.Errno) {
+	ret, _, err := syscall.Syscall(resetDC.Addr(), 2,
 		uintptr(hdc),
 		uintptr(unsafe.Pointer(lpInitData)),
 		0)
 
-	return HDC(ret)
+	return HDC(ret), err
 }
 
-func RestoreDC(hdc HDC, nSaveDC int32) bool {
-	ret, _, _ := syscall.Syscall(restoreDC.Addr(), 2,
+func RestoreDC(hdc HDC, nSaveDC int32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(restoreDC.Addr(), 2,
 		uintptr(hdc),
 		uintptr(nSaveDC),
 		0)
-	return ret != 0
+	return ret != 0, err
 }
 
-func RoundRect(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect, nWidth, nHeight int32) bool {
-	ret, _, _ := syscall.Syscall9(roundRect.Addr(), 7,
+func RoundRect(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect, nWidth, nHeight int32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall9(roundRect.Addr(), 7,
 		uintptr(hdc),
 		uintptr(nLeftRect),
 		uintptr(nTopRect),
@@ -1780,46 +1780,46 @@ func RoundRect(hdc HDC, nLeftRect, nTopRect, nRightRect, nBottomRect, nWidth, nH
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SaveDC(hdc HDC) int32 {
-	ret, _, _ := syscall.Syscall(saveDC.Addr(), 1,
+func SaveDC(hdc HDC) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(saveDC.Addr(), 1,
 		uintptr(hdc),
 		0,
 		0)
-	return int32(ret)
+	return int32(ret), err
 }
 
-func SelectObject(hdc HDC, hgdiobj HGDIOBJ) HGDIOBJ {
-	ret, _, _ := syscall.Syscall(selectObject.Addr(), 2,
+func SelectObject(hdc HDC, hgdiobj HGDIOBJ) (HGDIOBJ, syscall.Errno) {
+	ret, _, err := syscall.Syscall(selectObject.Addr(), 2,
 		uintptr(hdc),
 		uintptr(hgdiobj),
 		0)
 
-	return HGDIOBJ(ret)
+	return HGDIOBJ(ret), err
 }
 
-func SetBkColor(hdc HDC, crColor COLORREF) COLORREF {
-	ret, _, _ := syscall.Syscall(setBkColor.Addr(), 2,
+func SetBkColor(hdc HDC, crColor COLORREF) (COLORREF, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setBkColor.Addr(), 2,
 		uintptr(hdc),
 		uintptr(crColor),
 		0)
 
-	return COLORREF(ret)
+	return COLORREF(ret), err
 }
 
-func SetBkMode(hdc HDC, iBkMode int32) int32 {
-	ret, _, _ := syscall.Syscall(setBkMode.Addr(), 2,
+func SetBkMode(hdc HDC, iBkMode int32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setBkMode.Addr(), 2,
 		uintptr(hdc),
 		uintptr(iBkMode),
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func SetBrushOrgEx(hdc HDC, nXOrg, nYOrg int32, lppt *POINT) bool {
-	ret, _, _ := syscall.Syscall6(setBrushOrgEx.Addr(), 4,
+func SetBrushOrgEx(hdc HDC, nXOrg, nYOrg int32, lppt *POINT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(setBrushOrgEx.Addr(), 4,
 		uintptr(hdc),
 		uintptr(nXOrg),
 		uintptr(nYOrg),
@@ -1827,11 +1827,11 @@ func SetBrushOrgEx(hdc HDC, nXOrg, nYOrg int32, lppt *POINT) bool {
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SetDIBits(hdc HDC, hbmp HBITMAP, uStartScan, cScanLines uint32, lpvBits *byte, lpbmi *BITMAPINFO, fuColorUse uint32) int32 {
-	ret, _, _ := syscall.Syscall9(setDIBits.Addr(), 7,
+func SetDIBits(hdc HDC, hbmp HBITMAP, uStartScan, cScanLines uint32, lpvBits *byte, lpbmi *BITMAPINFO, fuColorUse uint32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall9(setDIBits.Addr(), 7,
 		uintptr(hdc),
 		uintptr(hbmp),
 		uintptr(uStartScan),
@@ -1842,11 +1842,11 @@ func SetDIBits(hdc HDC, hbmp HBITMAP, uStartScan, cScanLines uint32, lpvBits *by
 		0,
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func SetPixel(hdc HDC, X, Y int32, crColor COLORREF) COLORREF {
-	ret, _, _ := syscall.Syscall6(setPixel.Addr(), 4,
+func SetPixel(hdc HDC, X, Y int32, crColor COLORREF) (COLORREF, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(setPixel.Addr(), 4,
 		uintptr(hdc),
 		uintptr(X),
 		uintptr(Y),
@@ -1854,38 +1854,38 @@ func SetPixel(hdc HDC, X, Y int32, crColor COLORREF) COLORREF {
 		0,
 		0)
 
-	return COLORREF(ret)
+	return COLORREF(ret), err
 }
 
-func SetPixelFormat(hdc HDC, iPixelFormat int32, ppfd *PIXELFORMATDESCRIPTOR) bool {
-	ret, _, _ := syscall.Syscall(setPixelFormat.Addr(), 3,
+func SetPixelFormat(hdc HDC, iPixelFormat int32, ppfd *PIXELFORMATDESCRIPTOR) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setPixelFormat.Addr(), 3,
 		uintptr(hdc),
 		uintptr(iPixelFormat),
 		uintptr(unsafe.Pointer(ppfd)))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SetStretchBltMode(hdc HDC, iStretchMode int32) int32 {
-	ret, _, _ := syscall.Syscall(setStretchBltMode.Addr(), 2,
+func SetStretchBltMode(hdc HDC, iStretchMode int32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setStretchBltMode.Addr(), 2,
 		uintptr(hdc),
 		uintptr(iStretchMode),
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func SetTextColor(hdc HDC, crColor COLORREF) COLORREF {
-	ret, _, _ := syscall.Syscall(setTextColor.Addr(), 2,
+func SetTextColor(hdc HDC, crColor COLORREF) (COLORREF, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setTextColor.Addr(), 2,
 		uintptr(hdc),
 		uintptr(crColor),
 		0)
 
-	return COLORREF(ret)
+	return COLORREF(ret), err
 }
 
-func SetViewportOrgEx(hdc HDC, x, y int32, lpPoint *POINT) COLORREF {
-	ret, _, _ := syscall.Syscall6(setViewportOrgEx.Addr(), 4,
+func SetViewportOrgEx(hdc HDC, x, y int32, lpPoint *POINT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(setViewportOrgEx.Addr(), 4,
 		uintptr(hdc),
 		uintptr(x),
 		uintptr(y),
@@ -1893,29 +1893,29 @@ func SetViewportOrgEx(hdc HDC, x, y int32, lpPoint *POINT) COLORREF {
 		0,
 		0)
 
-	return COLORREF(ret)
+	return ret != 0, err
 }
 
-func StartDoc(hdc HDC, lpdi *DOCINFO) int32 {
-	ret, _, _ := syscall.Syscall(startDoc.Addr(), 2,
+func StartDoc(hdc HDC, lpdi *DOCINFO) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(startDoc.Addr(), 2,
 		uintptr(hdc),
 		uintptr(unsafe.Pointer(lpdi)),
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func StartPage(hdc HDC) int32 {
-	ret, _, _ := syscall.Syscall(startPage.Addr(), 1,
+func StartPage(hdc HDC) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(startPage.Addr(), 1,
 		uintptr(hdc),
 		0,
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func StretchBlt(hdcDest HDC, nXOriginDest, nYOriginDest, nWidthDest, nHeightDest int32, hdcSrc HDC, nXOriginSrc, nYOriginSrc, nWidthSrc, nHeightSrc int32, dwRop uint32) bool {
-	ret, _, _ := syscall.Syscall12(stretchBlt.Addr(), 11,
+func StretchBlt(hdcDest HDC, nXOriginDest, nYOriginDest, nWidthDest, nHeightDest int32, hdcSrc HDC, nXOriginSrc, nYOriginSrc, nWidthSrc, nHeightSrc int32, dwRop uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall12(stretchBlt.Addr(), 11,
 		uintptr(hdcDest),
 		uintptr(nXOriginDest),
 		uintptr(nYOriginDest),
@@ -1929,31 +1929,31 @@ func StretchBlt(hdcDest HDC, nXOriginDest, nYOriginDest, nWidthDest, nHeightDest
 		uintptr(dwRop),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SwapBuffers(hdc HDC) bool {
-	ret, _, _ := syscall.Syscall(swapBuffers.Addr(), 1,
+func SwapBuffers(hdc HDC) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(swapBuffers.Addr(), 1,
 		uintptr(hdc),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func TextOut(hdc HDC, nXStart, nYStart int32, lpString *uint16, cchString int32) bool {
-	ret, _, _ := syscall.Syscall6(textOut.Addr(), 5,
+func TextOut(hdc HDC, nXStart, nYStart int32, lpString *uint16, cchString int32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(textOut.Addr(), 5,
 		uintptr(hdc),
 		uintptr(nXStart),
 		uintptr(nYStart),
 		uintptr(unsafe.Pointer(lpString)),
 		uintptr(cchString),
 		0)
-	return ret != 0
+	return ret != 0, err
 }
 
-func TransparentBlt(hdcDest HDC, xoriginDest, yoriginDest, wDest, hDest int32, hdcSrc HDC, xoriginSrc, yoriginSrc, wSrc, hSrc int32, crTransparent uint32) bool {
-	ret, _, _ := syscall.Syscall12(transparentBlt.Addr(), 11,
+func TransparentBlt(hdcDest HDC, xoriginDest, yoriginDest, wDest, hDest int32, hdcSrc HDC, xoriginSrc, yoriginSrc, wSrc, hSrc int32, crTransparent uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall12(transparentBlt.Addr(), 11,
 		uintptr(hdcDest),
 		uintptr(xoriginDest),
 		uintptr(yoriginDest),
@@ -1967,5 +1967,5 @@ func TransparentBlt(hdcDest HDC, xoriginDest, yoriginDest, wDest, hDest int32, h
 		uintptr(crTransparent),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }

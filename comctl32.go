@@ -284,26 +284,26 @@ func init() {
 	loadIconWithScaleDown = libcomctl32.NewProc("LoadIconWithScaleDown")
 }
 
-func ImageList_Add(himl HIMAGELIST, hbmImage, hbmMask HBITMAP) int32 {
-	ret, _, _ := syscall.Syscall(imageList_Add.Addr(), 3,
+func ImageList_Add(himl HIMAGELIST, hbmImage, hbmMask HBITMAP) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(imageList_Add.Addr(), 3,
 		uintptr(himl),
 		uintptr(hbmImage),
 		uintptr(hbmMask))
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func ImageList_AddMasked(himl HIMAGELIST, hbmImage HBITMAP, crMask COLORREF) int32 {
-	ret, _, _ := syscall.Syscall(imageList_AddMasked.Addr(), 3,
+func ImageList_AddMasked(himl HIMAGELIST, hbmImage HBITMAP, crMask COLORREF) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(imageList_AddMasked.Addr(), 3,
 		uintptr(himl),
 		uintptr(hbmImage),
 		uintptr(crMask))
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func ImageList_Create(cx, cy int32, flags uint32, cInitial, cGrow int32) HIMAGELIST {
-	ret, _, _ := syscall.Syscall6(imageList_Create.Addr(), 5,
+func ImageList_Create(cx, cy int32, flags uint32, cInitial, cGrow int32) (HIMAGELIST, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(imageList_Create.Addr(), 5,
 		uintptr(cx),
 		uintptr(cy),
 		uintptr(flags),
@@ -311,20 +311,20 @@ func ImageList_Create(cx, cy int32, flags uint32, cInitial, cGrow int32) HIMAGEL
 		uintptr(cGrow),
 		0)
 
-	return HIMAGELIST(ret)
+	return HIMAGELIST(ret), err
 }
 
-func ImageList_Destroy(hIml HIMAGELIST) bool {
-	ret, _, _ := syscall.Syscall(imageList_Destroy.Addr(), 1,
+func ImageList_Destroy(hIml HIMAGELIST) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(imageList_Destroy.Addr(), 1,
 		uintptr(hIml),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func ImageList_DrawEx(himl HIMAGELIST, i int32, hdcDst HDC, x, y, dx, dy int32, rgbBk COLORREF, rgbFg COLORREF, fStyle uint32) bool {
-	ret, _, _ := syscall.Syscall12(imageList_DrawEx.Addr(), 10,
+func ImageList_DrawEx(himl HIMAGELIST, i int32, hdcDst HDC, x, y, dx, dy int32, rgbBk COLORREF, rgbFg COLORREF, fStyle uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall12(imageList_DrawEx.Addr(), 10,
 		uintptr(himl),
 		uintptr(i),
 		uintptr(hdcDst),
@@ -338,32 +338,32 @@ func ImageList_DrawEx(himl HIMAGELIST, i int32, hdcDst HDC, x, y, dx, dy int32, 
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func ImageList_ReplaceIcon(himl HIMAGELIST, i int32, hicon HICON) int32 {
-	ret, _, _ := syscall.Syscall(imageList_ReplaceIcon.Addr(), 3,
+func ImageList_ReplaceIcon(himl HIMAGELIST, i int32, hicon HICON) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(imageList_ReplaceIcon.Addr(), 3,
 		uintptr(himl),
 		uintptr(i),
 		uintptr(hicon))
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func InitCommonControlsEx(lpInitCtrls *INITCOMMONCONTROLSEX) bool {
-	ret, _, _ := syscall.Syscall(initCommonControlsEx.Addr(), 1,
+func InitCommonControlsEx(lpInitCtrls *INITCOMMONCONTROLSEX) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(initCommonControlsEx.Addr(), 1,
 		uintptr(unsafe.Pointer(lpInitCtrls)),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func LoadIconMetric(hInstance HINSTANCE, lpIconName *uint16, lims int32, hicon *HICON) HRESULT {
+func LoadIconMetric(hInstance HINSTANCE, lpIconName *uint16, lims int32, hicon *HICON) (HRESULT, syscall.Errno) {
 	if loadIconMetric.Find() != nil {
-		return HRESULT(0)
+		return HRESULT(0), syscall.ERROR_PROC_NOT_FOUND
 	}
-	ret, _, _ := syscall.Syscall6(loadIconMetric.Addr(), 4,
+	ret, _, err := syscall.Syscall6(loadIconMetric.Addr(), 4,
 		uintptr(hInstance),
 		uintptr(unsafe.Pointer(lpIconName)),
 		uintptr(lims),
@@ -371,14 +371,14 @@ func LoadIconMetric(hInstance HINSTANCE, lpIconName *uint16, lims int32, hicon *
 		0,
 		0)
 
-	return HRESULT(ret)
+	return HRESULT(ret), err
 }
 
-func LoadIconWithScaleDown(hInstance HINSTANCE, lpIconName *uint16, w int32, h int32, hicon *HICON) HRESULT {
+func LoadIconWithScaleDown(hInstance HINSTANCE, lpIconName *uint16, w int32, h int32, hicon *HICON) (HRESULT, syscall.Errno) {
 	if loadIconWithScaleDown.Find() != nil {
-		return HRESULT(0)
+		return HRESULT(0), syscall.ERROR_PROC_NOT_FOUND
 	}
-	ret, _, _ := syscall.Syscall6(loadIconWithScaleDown.Addr(), 5,
+	ret, _, err := syscall.Syscall6(loadIconWithScaleDown.Addr(), 5,
 		uintptr(hInstance),
 		uintptr(unsafe.Pointer(lpIconName)),
 		uintptr(w),
@@ -386,5 +386,5 @@ func LoadIconWithScaleDown(hInstance HINSTANCE, lpIconName *uint16, w int32, h i
 		uintptr(unsafe.Pointer(hicon)),
 		0)
 
-	return HRESULT(ret)
+	return HRESULT(ret), err
 }

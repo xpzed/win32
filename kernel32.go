@@ -175,80 +175,80 @@ func init() {
 	systemTimeToFileTime = libkernel32.NewProc("SystemTimeToFileTime")
 }
 
-func ActivateActCtx(ctx HANDLE) (uintptr, bool) {
+func ActivateActCtx(ctx HANDLE) (uintptr, bool, syscall.Errno) {
 	var cookie uintptr
-	ret, _, _ := syscall.Syscall(activateActCtx.Addr(), 2,
+	ret, _, err := syscall.Syscall(activateActCtx.Addr(), 2,
 		uintptr(ctx),
 		uintptr(unsafe.Pointer(&cookie)),
 		0)
-	return cookie, ret != 0
+	return cookie, ret != 0, err
 }
 
-func CloseHandle(hObject HANDLE) bool {
-	ret, _, _ := syscall.Syscall(closeHandle.Addr(), 1,
+func CloseHandle(hObject HANDLE) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(closeHandle.Addr(), 1,
 		uintptr(hObject),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func CreateActCtx(ctx *ACTCTX) HANDLE {
+func CreateActCtx(ctx *ACTCTX) (HANDLE, syscall.Errno) {
 	if ctx != nil {
 		ctx.size = uint32(unsafe.Sizeof(*ctx))
 	}
-	ret, _, _ := syscall.Syscall(
+	ret, _, err := syscall.Syscall(
 		createActCtx.Addr(),
 		1,
 		uintptr(unsafe.Pointer(ctx)),
 		0,
 		0)
-	return HANDLE(ret)
+	return HANDLE(ret), err
 }
 
-func FileTimeToSystemTime(lpFileTime *FILETIME, lpSystemTime *SYSTEMTIME) bool {
-	ret, _, _ := syscall.Syscall(fileTimeToSystemTime.Addr(), 2,
+func FileTimeToSystemTime(lpFileTime *FILETIME, lpSystemTime *SYSTEMTIME) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(fileTimeToSystemTime.Addr(), 2,
 		uintptr(unsafe.Pointer(lpFileTime)),
 		uintptr(unsafe.Pointer(lpSystemTime)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func FindResource(hModule HMODULE, lpName, lpType *uint16) HRSRC {
-	ret, _, _ := syscall.Syscall(findResource.Addr(), 3,
+func FindResource(hModule HMODULE, lpName, lpType *uint16) (HRSRC, syscall.Errno) {
+	ret, _, err := syscall.Syscall(findResource.Addr(), 3,
 		uintptr(hModule),
 		uintptr(unsafe.Pointer(lpName)),
 		uintptr(unsafe.Pointer(lpType)))
 
-	return HRSRC(ret)
+	return HRSRC(ret), err
 }
 
-func GetConsoleTitle(lpConsoleTitle *uint16, nSize uint32) uint32 {
-	ret, _, _ := syscall.Syscall(getConsoleTitle.Addr(), 2,
+func GetConsoleTitle(lpConsoleTitle *uint16, nSize uint32) (uint32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getConsoleTitle.Addr(), 2,
 		uintptr(unsafe.Pointer(lpConsoleTitle)),
 		uintptr(nSize),
 		0)
 
-	return uint32(ret)
+	return uint32(ret), err
 }
 
-func GetConsoleWindow() HWND {
-	ret, _, _ := syscall.Syscall(getConsoleWindow.Addr(), 0,
+func GetConsoleWindow() (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getConsoleWindow.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func GetCurrentThreadId() uint32 {
-	ret, _, _ := syscall.Syscall(getCurrentThreadId.Addr(), 0,
+func GetCurrentThreadId() (uint32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getCurrentThreadId.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return uint32(ret)
+	return uint32(ret), err
 }
 
 func GetLastError() uint32 {
@@ -260,8 +260,8 @@ func GetLastError() uint32 {
 	return uint32(ret)
 }
 
-func GetLocaleInfo(Locale LCID, LCType LCTYPE, lpLCData *uint16, cchData int32) int32 {
-	ret, _, _ := syscall.Syscall6(getLocaleInfo.Addr(), 4,
+func GetLocaleInfo(Locale LCID, LCType LCTYPE, lpLCData *uint16, cchData int32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(getLocaleInfo.Addr(), 4,
 		uintptr(Locale),
 		uintptr(LCType),
 		uintptr(unsafe.Pointer(lpLCData)),
@@ -269,29 +269,29 @@ func GetLocaleInfo(Locale LCID, LCType LCTYPE, lpLCData *uint16, cchData int32) 
 		0,
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func GetLogicalDriveStrings(nBufferLength uint32, lpBuffer *uint16) uint32 {
-	ret, _, _ := syscall.Syscall(getLogicalDriveStrings.Addr(), 2,
+func GetLogicalDriveStrings(nBufferLength uint32, lpBuffer *uint16) (uint32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getLogicalDriveStrings.Addr(), 2,
 		uintptr(nBufferLength),
 		uintptr(unsafe.Pointer(lpBuffer)),
 		0)
 
-	return uint32(ret)
+	return uint32(ret), err
 }
 
-func GetModuleHandle(lpModuleName *uint16) HINSTANCE {
-	ret, _, _ := syscall.Syscall(getModuleHandle.Addr(), 1,
+func GetModuleHandle(lpModuleName *uint16) (HINSTANCE, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getModuleHandle.Addr(), 1,
 		uintptr(unsafe.Pointer(lpModuleName)),
 		0,
 		0)
 
-	return HINSTANCE(ret)
+	return HINSTANCE(ret), err
 }
 
-func GetNumberFormat(Locale LCID, dwFlags uint32, lpValue *uint16, lpFormat *NUMBERFMT, lpNumberStr *uint16, cchNumber int32) int32 {
-	ret, _, _ := syscall.Syscall6(getNumberFormat.Addr(), 6,
+func GetNumberFormat(Locale LCID, dwFlags uint32, lpValue *uint16, lpFormat *NUMBERFMT, lpNumberStr *uint16, cchNumber int32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(getNumberFormat.Addr(), 6,
 		uintptr(Locale),
 		uintptr(dwFlags),
 		uintptr(unsafe.Pointer(lpValue)),
@@ -299,130 +299,131 @@ func GetNumberFormat(Locale LCID, dwFlags uint32, lpValue *uint16, lpFormat *NUM
 		uintptr(unsafe.Pointer(lpNumberStr)),
 		uintptr(cchNumber))
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func GetPhysicallyInstalledSystemMemory(totalMemoryInKilobytes *uint64) bool {
+func GetPhysicallyInstalledSystemMemory(totalMemoryInKilobytes *uint64) (bool, syscall.Errno) {
 	if getPhysicallyInstalledSystemMemory.Find() != nil {
-		return false
+		return false, syscall.ERROR_PROC_NOT_FOUND
 	}
-	ret, _, _ := syscall.Syscall(getPhysicallyInstalledSystemMemory.Addr(), 1,
+	ret, _, err := syscall.Syscall(getPhysicallyInstalledSystemMemory.Addr(), 1,
 		uintptr(unsafe.Pointer(totalMemoryInKilobytes)),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetProfileString(lpAppName, lpKeyName, lpDefault *uint16, lpReturnedString uintptr, nSize uint32) bool {
-	ret, _, _ := syscall.Syscall6(getProfileString.Addr(), 5,
+func GetProfileString(lpAppName, lpKeyName, lpDefault *uint16, lpReturnedString uintptr, nSize uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(getProfileString.Addr(), 5,
 		uintptr(unsafe.Pointer(lpAppName)),
 		uintptr(unsafe.Pointer(lpKeyName)),
 		uintptr(unsafe.Pointer(lpDefault)),
 		lpReturnedString,
 		uintptr(nSize),
 		0)
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetThreadLocale() LCID {
-	ret, _, _ := syscall.Syscall(getThreadLocale.Addr(), 0,
+func GetThreadLocale() (LCID, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getThreadLocale.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return LCID(ret)
+	return LCID(ret), err
 }
 
-func GetThreadUILanguage() LANGID {
+func GetThreadUILanguage() (LANGID, syscall.Errno) {
 	if getThreadUILanguage.Find() != nil {
-		return 0
+		return 0, syscall.ERROR_PROC_NOT_FOUND
 	}
 
-	ret, _, _ := syscall.Syscall(getThreadUILanguage.Addr(), 0,
+	ret, _, err := syscall.Syscall(getThreadUILanguage.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return LANGID(ret)
+	return LANGID(ret), err
 }
 
-func GetVersion() uint32 {
-	ret, _, _ := syscall.Syscall(getVersion.Addr(), 0,
+func GetVersion() (uint32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getVersion.Addr(), 0,
 		0,
 		0,
 		0)
-	return uint32(ret)
+	return uint32(ret), err
 }
 
-func GlobalAlloc(uFlags uint32, dwBytes uintptr) HGLOBAL {
-	ret, _, _ := syscall.Syscall(globalAlloc.Addr(), 2,
+func GlobalAlloc(uFlags uint32, dwBytes uintptr) (HGLOBAL, syscall.Errno) {
+	ret, _, err := syscall.Syscall(globalAlloc.Addr(), 2,
 		uintptr(uFlags),
 		dwBytes,
 		0)
 
-	return HGLOBAL(ret)
+	return HGLOBAL(ret), err
 }
 
-func GlobalFree(hMem HGLOBAL) HGLOBAL {
-	ret, _, _ := syscall.Syscall(globalFree.Addr(), 1,
+func GlobalFree(hMem HGLOBAL) (HGLOBAL, syscall.Errno) {
+	ret, _, err := syscall.Syscall(globalFree.Addr(), 1,
 		uintptr(hMem),
 		0,
 		0)
 
-	return HGLOBAL(ret)
+	return HGLOBAL(ret), err
 }
 
-func GlobalLock(hMem HGLOBAL) unsafe.Pointer {
-	ret, _, _ := syscall.Syscall(globalLock.Addr(), 1,
+func GlobalLock(hMem HGLOBAL) (unsafe.Pointer, syscall.Errno) {
+	ret, _, err := syscall.Syscall(globalLock.Addr(), 1,
 		uintptr(hMem),
 		0,
 		0)
 
-	return unsafe.Pointer(ret)
+	return unsafe.Pointer(ret), err
 }
 
-func GlobalUnlock(hMem HGLOBAL) bool {
-	ret, _, _ := syscall.Syscall(globalUnlock.Addr(), 1,
+func GlobalUnlock(hMem HGLOBAL) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(globalUnlock.Addr(), 1,
 		uintptr(hMem),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func MoveMemory(destination, source unsafe.Pointer, length uintptr) {
-	syscall.Syscall(moveMemory.Addr(), 3,
+func MoveMemory(destination, source unsafe.Pointer, length uintptr) syscall.Errno {
+	_, _, err := syscall.Syscall(moveMemory.Addr(), 3,
 		uintptr(unsafe.Pointer(destination)),
 		uintptr(source),
 		uintptr(length))
+	return err
 }
 
-func MulDiv(nNumber, nNumerator, nDenominator int32) int32 {
-	ret, _, _ := syscall.Syscall(mulDiv.Addr(), 3,
+func MulDiv(nNumber, nNumerator, nDenominator int32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(mulDiv.Addr(), 3,
 		uintptr(nNumber),
 		uintptr(nNumerator),
 		uintptr(nDenominator))
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func LoadResource(hModule HMODULE, hResInfo HRSRC) HGLOBAL {
-	ret, _, _ := syscall.Syscall(loadResource.Addr(), 2,
+func LoadResource(hModule HMODULE, hResInfo HRSRC) (HGLOBAL, syscall.Errno) {
+	ret, _, err := syscall.Syscall(loadResource.Addr(), 2,
 		uintptr(hModule),
 		uintptr(hResInfo),
 		0)
 
-	return HGLOBAL(ret)
+	return HGLOBAL(ret), err
 }
 
-func LockResource(hResData HGLOBAL) uintptr {
-	ret, _, _ := syscall.Syscall(lockResource.Addr(), 1,
+func LockResource(hResData HGLOBAL) (uintptr, syscall.Errno) {
+	ret, _, err := syscall.Syscall(lockResource.Addr(), 1,
 		uintptr(hResData),
 		0,
 		0)
 
-	return ret
+	return ret, err
 }
 
 func SetLastError(dwErrorCode uint32) {
@@ -432,20 +433,20 @@ func SetLastError(dwErrorCode uint32) {
 		0)
 }
 
-func SizeofResource(hModule HMODULE, hResInfo HRSRC) uint32 {
-	ret, _, _ := syscall.Syscall(sizeofResource.Addr(), 2,
+func SizeofResource(hModule HMODULE, hResInfo HRSRC) (uint32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(sizeofResource.Addr(), 2,
 		uintptr(hModule),
 		uintptr(hResInfo),
 		0)
 
-	return uint32(ret)
+	return uint32(ret), err
 }
 
-func SystemTimeToFileTime(lpSystemTime *SYSTEMTIME, lpFileTime *FILETIME) bool {
-	ret, _, _ := syscall.Syscall(systemTimeToFileTime.Addr(), 2,
+func SystemTimeToFileTime(lpSystemTime *SYSTEMTIME, lpFileTime *FILETIME) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(systemTimeToFileTime.Addr(), 2,
 		uintptr(unsafe.Pointer(lpSystemTime)),
 		uintptr(unsafe.Pointer(lpFileTime)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }

@@ -2059,83 +2059,83 @@ func init() {
 	windowFromPoint = libuser32.NewProc("WindowFromPoint")
 }
 
-func AddClipboardFormatListener(hwnd HWND) bool {
+func AddClipboardFormatListener(hwnd HWND) (bool, syscall.Errno) {
 	if addClipboardFormatListener.Find() != nil {
-		return false
+		return false, syscall.ERROR_PROC_NOT_FOUND
 	}
 
-	ret, _, _ := syscall.Syscall(addClipboardFormatListener.Addr(), 1,
+	ret, _, err := syscall.Syscall(addClipboardFormatListener.Addr(), 1,
 		uintptr(hwnd),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func AdjustWindowRect(lpRect *RECT, dwStyle uint32, bMenu bool) bool {
-	ret, _, _ := syscall.Syscall(adjustWindowRect.Addr(), 3,
+func AdjustWindowRect(lpRect *RECT, dwStyle uint32, bMenu bool) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(adjustWindowRect.Addr(), 3,
 		uintptr(unsafe.Pointer(lpRect)),
 		uintptr(dwStyle),
 		uintptr(BoolToBOOL(bMenu)))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func AttachThreadInput(idAttach int32, idAttachTo int32, fAttach bool) bool {
-	ret, _, _ := syscall.Syscall(attachThreadInput.Addr(), 3,
+func AttachThreadInput(idAttach int32, idAttachTo int32, fAttach bool) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(attachThreadInput.Addr(), 3,
 		uintptr(idAttach),
 		uintptr(idAttachTo),
 		uintptr(BoolToBOOL(fAttach)))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func AnimateWindow(hwnd HWND, dwTime, dwFlags uint32) bool {
-	ret, _, _ := syscall.Syscall(animateWindow.Addr(), 3,
+func AnimateWindow(hwnd HWND, dwTime, dwFlags uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(animateWindow.Addr(), 3,
 		uintptr(hwnd),
 		uintptr(dwTime),
 		uintptr(dwFlags))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func BeginDeferWindowPos(nNumWindows int32) HDWP {
-	ret, _, _ := syscall.Syscall(beginDeferWindowPos.Addr(), 1,
+func BeginDeferWindowPos(nNumWindows int32) (HDWP, syscall.Errno) {
+	ret, _, err := syscall.Syscall(beginDeferWindowPos.Addr(), 1,
 		uintptr(nNumWindows),
 		0,
 		0)
 
-	return HDWP(ret)
+	return HDWP(ret), err
 }
 
-func GetWindowThreadProcessId(hwnd HWND, processId *uint32) uint32 {
-	ret, _, _ := syscall.Syscall(getWindowThreadProcessId.Addr(), 2,
+func GetWindowThreadProcessId(hwnd HWND, processId *uint32) (uint32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getWindowThreadProcessId.Addr(), 2,
 		uintptr(hwnd),
 		uintptr(unsafe.Pointer(processId)),
 		0)
 
-	return uint32(ret)
+	return uint32(ret), err
 }
 
-func BeginPaint(hwnd HWND, lpPaint *PAINTSTRUCT) HDC {
-	ret, _, _ := syscall.Syscall(beginPaint.Addr(), 2,
+func BeginPaint(hwnd HWND, lpPaint *PAINTSTRUCT) (HDC, syscall.Errno) {
+	ret, _, err := syscall.Syscall(beginPaint.Addr(), 2,
 		uintptr(hwnd),
 		uintptr(unsafe.Pointer(lpPaint)),
 		0)
 
-	return HDC(ret)
+	return HDC(ret), err
 }
 
-func BringWindowToTop(hwnd HWND) bool {
-	ret, _, _ := syscall.Syscall(bringWindowToTop.Addr(), 1,
+func BringWindowToTop(hwnd HWND) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(bringWindowToTop.Addr(), 1,
 		uintptr(hwnd),
 		0,
 		0)
-	return ret != 0
+	return ret != 0, err
 }
 
-func CallWindowProc(lpPrevWndFunc uintptr, hWnd HWND, Msg uint32, wParam, lParam uintptr) uintptr {
-	ret, _, _ := syscall.Syscall6(callWindowProc.Addr(), 5,
+func CallWindowProc(lpPrevWndFunc uintptr, hWnd HWND, Msg uint32, wParam, lParam uintptr) (uintptr, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(callWindowProc.Addr(), 5,
 		lpPrevWndFunc,
 		uintptr(hWnd),
 		uintptr(Msg),
@@ -2143,22 +2143,22 @@ func CallWindowProc(lpPrevWndFunc uintptr, hWnd HWND, Msg uint32, wParam, lParam
 		lParam,
 		0)
 
-	return ret
+	return ret, err
 }
 
-func ChangeWindowMessageFilterEx(hwnd HWND, msg uint32, action uint32, changeFilterStruct *CHANGEFILTERSTRUCT) bool {
-	ret, _, _ := syscall.Syscall6(changeWindowMessageFilterEx.Addr(), 4,
+func ChangeWindowMessageFilterEx(hwnd HWND, msg uint32, action uint32, changeFilterStruct *CHANGEFILTERSTRUCT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(changeWindowMessageFilterEx.Addr(), 4,
 		uintptr(hwnd),
 		uintptr(msg),
 		uintptr(action),
 		uintptr(unsafe.Pointer(changeFilterStruct)),
 		0,
 		0)
-	return ret != 0
+	return ret != 0, err
 }
 
-func CheckMenuRadioItem(hmenu HMENU, first, last, check, flags uint32) bool {
-	ret, _, _ := syscall.Syscall6(checkMenuRadioItem.Addr(), 5,
+func CheckMenuRadioItem(hmenu HMENU, first, last, check, flags uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(checkMenuRadioItem.Addr(), 5,
 		uintptr(hmenu),
 		uintptr(first),
 		uintptr(last),
@@ -2166,30 +2166,30 @@ func CheckMenuRadioItem(hmenu HMENU, first, last, check, flags uint32) bool {
 		uintptr(flags),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func ClientToScreen(hwnd HWND, lpPoint *POINT) bool {
-	ret, _, _ := syscall.Syscall(clientToScreen.Addr(), 2,
+func ClientToScreen(hwnd HWND, lpPoint *POINT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(clientToScreen.Addr(), 2,
 		uintptr(hwnd),
 		uintptr(unsafe.Pointer(lpPoint)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func CloseClipboard() bool {
-	ret, _, _ := syscall.Syscall(closeClipboard.Addr(), 0,
+func CloseClipboard() (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(closeClipboard.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
 func CreateDialogParam(instRes HINSTANCE, name *uint16, parent HWND,
-	proc, param uintptr) HWND {
-	ret, _, _ := syscall.Syscall6(createDialogParam.Addr(), 5,
+	proc, param uintptr) (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(createDialogParam.Addr(), 5,
 		uintptr(instRes),
 		uintptr(unsafe.Pointer(name)),
 		uintptr(parent),
@@ -2197,38 +2197,38 @@ func CreateDialogParam(instRes HINSTANCE, name *uint16, parent HWND,
 		param,
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func CreateIconIndirect(lpiconinfo *ICONINFO) HICON {
-	ret, _, _ := syscall.Syscall(createIconIndirect.Addr(), 1,
+func CreateIconIndirect(lpiconinfo *ICONINFO) (HICON, syscall.Errno) {
+	ret, _, err := syscall.Syscall(createIconIndirect.Addr(), 1,
 		uintptr(unsafe.Pointer(lpiconinfo)),
 		0,
 		0)
 
-	return HICON(ret)
+	return HICON(ret), err
 }
 
-func CreateMenu() HMENU {
-	ret, _, _ := syscall.Syscall(createMenu.Addr(), 0,
+func CreateMenu() (HMENU, syscall.Errno) {
+	ret, _, err := syscall.Syscall(createMenu.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return HMENU(ret)
+	return HMENU(ret), err
 }
 
-func CreatePopupMenu() HMENU {
-	ret, _, _ := syscall.Syscall(createPopupMenu.Addr(), 0,
+func CreatePopupMenu() (HMENU, syscall.Errno) {
+	ret, _, err := syscall.Syscall(createPopupMenu.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return HMENU(ret)
+	return HMENU(ret), err
 }
 
-func CreateWindowEx(dwExStyle uint32, lpClassName, lpWindowName *uint16, dwStyle uint32, x, y, nWidth, nHeight int32, hWndParent HWND, hMenu HMENU, hInstance HINSTANCE, lpParam unsafe.Pointer) HWND {
-	ret, _, _ := syscall.Syscall12(createWindowEx.Addr(), 12,
+func CreateWindowEx(dwExStyle uint32, lpClassName, lpWindowName *uint16, dwStyle uint32, x, y, nWidth, nHeight int32, hWndParent HWND, hMenu HMENU, hInstance HINSTANCE, lpParam unsafe.Pointer) (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall12(createWindowEx.Addr(), 12,
 		uintptr(dwExStyle),
 		uintptr(unsafe.Pointer(lpClassName)),
 		uintptr(unsafe.Pointer(lpWindowName)),
@@ -2242,11 +2242,11 @@ func CreateWindowEx(dwExStyle uint32, lpClassName, lpWindowName *uint16, dwStyle
 		uintptr(hInstance),
 		uintptr(lpParam))
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func DeferWindowPos(hWinPosInfo HDWP, hWnd, hWndInsertAfter HWND, x, y, cx, cy int32, uFlags uint32) HDWP {
-	ret, _, _ := syscall.Syscall9(deferWindowPos.Addr(), 8,
+func DeferWindowPos(hWinPosInfo HDWP, hWnd, hWndInsertAfter HWND, x, y, cx, cy int32, uFlags uint32) (HDWP, syscall.Errno) {
+	ret, _, err := syscall.Syscall9(deferWindowPos.Addr(), 8,
 		uintptr(hWinPosInfo),
 		uintptr(hWnd),
 		uintptr(hWndInsertAfter),
@@ -2257,11 +2257,11 @@ func DeferWindowPos(hWinPosInfo HDWP, hWnd, hWndInsertAfter HWND, x, y, cx, cy i
 		uintptr(uFlags),
 		0)
 
-	return HDWP(ret)
+	return HDWP(ret), err
 }
 
-func DefWindowProc(hWnd HWND, Msg uint32, wParam, lParam uintptr) uintptr {
-	ret, _, _ := syscall.Syscall6(defWindowProc.Addr(), 4,
+func DefWindowProc(hWnd HWND, Msg uint32, wParam, lParam uintptr) (uintptr, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(defWindowProc.Addr(), 4,
 		uintptr(hWnd),
 		uintptr(Msg),
 		wParam,
@@ -2269,47 +2269,47 @@ func DefWindowProc(hWnd HWND, Msg uint32, wParam, lParam uintptr) uintptr {
 		0,
 		0)
 
-	return ret
+	return ret, err
 }
 
-func DeleteMenu(hMenu HMENU, uPosition uint32, uFlags uint32) bool {
-	ret, _, _ := syscall.Syscall(deleteMenu.Addr(), 3,
+func DeleteMenu(hMenu HMENU, uPosition uint32, uFlags uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(deleteMenu.Addr(), 3,
 		uintptr(hMenu),
 		uintptr(uPosition),
 		uintptr(uFlags))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func DestroyIcon(hIcon HICON) bool {
-	ret, _, _ := syscall.Syscall(destroyIcon.Addr(), 1,
+func DestroyIcon(hIcon HICON) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(destroyIcon.Addr(), 1,
 		uintptr(hIcon),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func DestroyMenu(hMenu HMENU) bool {
-	ret, _, _ := syscall.Syscall(destroyMenu.Addr(), 1,
+func DestroyMenu(hMenu HMENU) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(destroyMenu.Addr(), 1,
 		uintptr(hMenu),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func DestroyWindow(hWnd HWND) bool {
-	ret, _, _ := syscall.Syscall(destroyWindow.Addr(), 1,
+func DestroyWindow(hWnd HWND) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(destroyWindow.Addr(), 1,
 		uintptr(hWnd),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func DialogBoxParam(instRes HINSTANCE, name *uint16, parent HWND, proc, param uintptr) int {
-	ret, _, _ := syscall.Syscall6(dialogBoxParam.Addr(), 5,
+func DialogBoxParam(instRes HINSTANCE, name *uint16, parent HWND, proc, param uintptr) (int, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(dialogBoxParam.Addr(), 5,
 		uintptr(instRes),
 		uintptr(unsafe.Pointer(name)),
 		uintptr(parent),
@@ -2317,29 +2317,29 @@ func DialogBoxParam(instRes HINSTANCE, name *uint16, parent HWND, proc, param ui
 		param,
 		0)
 
-	return int(ret)
+	return int(ret), err
 }
 
-func DispatchMessage(msg *MSG) uintptr {
-	ret, _, _ := syscall.Syscall(dispatchMessage.Addr(), 1,
+func DispatchMessage(msg *MSG) (uintptr, syscall.Errno) {
+	ret, _, err := syscall.Syscall(dispatchMessage.Addr(), 1,
 		uintptr(unsafe.Pointer(msg)),
 		0,
 		0)
 
-	return ret
+	return ret, err
 }
 
-func DrawFocusRect(hDC HDC, lprc *RECT) bool {
-	ret, _, _ := syscall.Syscall(drawFocusRect.Addr(), 2,
+func DrawFocusRect(hDC HDC, lprc *RECT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(drawFocusRect.Addr(), 2,
 		uintptr(hDC),
 		uintptr(unsafe.Pointer(lprc)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func DrawIconEx(hdc HDC, xLeft, yTop int32, hIcon HICON, cxWidth, cyWidth int32, istepIfAniCur uint32, hbrFlickerFreeDraw HBRUSH, diFlags uint32) bool {
-	ret, _, _ := syscall.Syscall9(drawIconEx.Addr(), 9,
+func DrawIconEx(hdc HDC, xLeft, yTop int32, hIcon HICON, cxWidth, cyWidth int32, istepIfAniCur uint32, hbrFlickerFreeDraw HBRUSH, diFlags uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall9(drawIconEx.Addr(), 9,
 		uintptr(hdc),
 		uintptr(xLeft),
 		uintptr(yTop),
@@ -2350,20 +2350,20 @@ func DrawIconEx(hdc HDC, xLeft, yTop int32, hIcon HICON, cxWidth, cyWidth int32,
 		uintptr(hbrFlickerFreeDraw),
 		uintptr(diFlags))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func DrawMenuBar(hWnd HWND) bool {
-	ret, _, _ := syscall.Syscall(drawMenuBar.Addr(), 1,
+func DrawMenuBar(hWnd HWND) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(drawMenuBar.Addr(), 1,
 		uintptr(hWnd),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func DrawTextEx(hdc HDC, lpchText *uint16, cchText int32, lprc *RECT, dwDTFormat uint32, lpDTParams *DRAWTEXTPARAMS) int32 {
-	ret, _, _ := syscall.Syscall6(drawTextEx.Addr(), 6,
+func DrawTextEx(hdc HDC, lpchText *uint16, cchText int32, lprc *RECT, dwDTFormat uint32, lpDTParams *DRAWTEXTPARAMS) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(drawTextEx.Addr(), 6,
 		uintptr(hdc),
 		uintptr(unsafe.Pointer(lpchText)),
 		uintptr(cchText),
@@ -2371,263 +2371,265 @@ func DrawTextEx(hdc HDC, lpchText *uint16, cchText int32, lprc *RECT, dwDTFormat
 		uintptr(dwDTFormat),
 		uintptr(unsafe.Pointer(lpDTParams)))
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func EmptyClipboard() bool {
-	ret, _, _ := syscall.Syscall(emptyClipboard.Addr(), 0,
+func EmptyClipboard() (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(emptyClipboard.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func EnableMenuItem(hMenu HMENU, uIDEnableItem uint32, uEnable uint32) bool {
-	ret, _, _ := syscall.Syscall(enableMenuItem.Addr(), 3,
+func EnableMenuItem(hMenu HMENU, uIDEnableItem uint32, uEnable uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(enableMenuItem.Addr(), 3,
 		uintptr(hMenu),
 		uintptr(uIDEnableItem),
 		uintptr(uEnable))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func EnableWindow(hWnd HWND, bEnable bool) bool {
-	ret, _, _ := syscall.Syscall(enableWindow.Addr(), 2,
+func EnableWindow(hWnd HWND, bEnable bool) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(enableWindow.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(BoolToBOOL(bEnable)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func EndDeferWindowPos(hWinPosInfo HDWP) bool {
-	ret, _, _ := syscall.Syscall(endDeferWindowPos.Addr(), 1,
+func EndDeferWindowPos(hWinPosInfo HDWP) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(endDeferWindowPos.Addr(), 1,
 		uintptr(hWinPosInfo),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func EndDialog(hwnd HWND, result int) bool {
-	ret, _, _ := syscall.Syscall(endDialog.Addr(), 2,
+func EndDialog(hwnd HWND, result int) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(endDialog.Addr(), 2,
 		uintptr(hwnd),
 		uintptr(result),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func EndPaint(hwnd HWND, lpPaint *PAINTSTRUCT) bool {
-	ret, _, _ := syscall.Syscall(endPaint.Addr(), 2,
+func EndPaint(hwnd HWND, lpPaint *PAINTSTRUCT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(endPaint.Addr(), 2,
 		uintptr(hwnd),
 		uintptr(unsafe.Pointer(lpPaint)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func EnumChildWindows(hWndParent HWND, lpEnumFunc, lParam uintptr) bool {
-	ret, _, _ := syscall.Syscall(enumChildWindows.Addr(), 3,
+func EnumChildWindows(hWndParent HWND, lpEnumFunc, lParam uintptr) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(enumChildWindows.Addr(), 3,
 		uintptr(hWndParent),
 		lpEnumFunc,
 		lParam)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func FindWindow(lpClassName, lpWindowName *uint16) HWND {
-	ret, _, _ := syscall.Syscall(findWindow.Addr(), 2,
+func FindWindow(lpClassName, lpWindowName *uint16) (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(findWindow.Addr(), 2,
 		uintptr(unsafe.Pointer(lpClassName)),
 		uintptr(unsafe.Pointer(lpWindowName)),
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func GetActiveWindow() HWND {
-	ret, _, _ := syscall.Syscall(getActiveWindow.Addr(), 0,
+func GetActiveWindow() (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getActiveWindow.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func GetAncestor(hWnd HWND, gaFlags uint32) HWND {
-	ret, _, _ := syscall.Syscall(getAncestor.Addr(), 2,
+func GetAncestor(hWnd HWND, gaFlags uint32) (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getAncestor.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(gaFlags),
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func GetCaretPos(lpPoint *POINT) bool {
-	ret, _, _ := syscall.Syscall(getCaretPos.Addr(), 1,
+func GetCaretPos(lpPoint *POINT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getCaretPos.Addr(), 1,
 		uintptr(unsafe.Pointer(lpPoint)),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetClassName(hWnd HWND, className *uint16, maxCount int) (int, error) {
-	ret, _, e := syscall.Syscall(getClassName.Addr(), 3,
+func GetClassName(hWnd HWND, className *uint16, maxCount int) (int, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getClassName.Addr(), 3,
 		uintptr(hWnd),
 		uintptr(unsafe.Pointer(className)),
 		uintptr(maxCount))
-	if ret == 0 {
-		return 0, e
-	}
-	return int(ret), nil
+
+	return int(ret), err
 }
 
-func GetClientRect(hWnd HWND, rect *RECT) bool {
-	ret, _, _ := syscall.Syscall(getClientRect.Addr(), 2,
+func GetClientRect(hWnd HWND, rect *RECT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getClientRect.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(unsafe.Pointer(rect)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetClipboardData(uFormat uint32) HANDLE {
-	ret, _, _ := syscall.Syscall(getClipboardData.Addr(), 1,
+func GetClipboardData(uFormat uint32) (HANDLE, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getClipboardData.Addr(), 1,
 		uintptr(uFormat),
 		0,
 		0)
 
-	return HANDLE(ret)
+	return HANDLE(ret), err
 }
 
-func GetCursorPos(lpPoint *POINT) bool {
-	ret, _, _ := syscall.Syscall(getCursorPos.Addr(), 1,
+func GetCursorPos(lpPoint *POINT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getCursorPos.Addr(), 1,
 		uintptr(unsafe.Pointer(lpPoint)),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetDesktopWindow() HWND {
-	ret, _, _ := syscall.Syscall(getDesktopWindow.Addr(), 0,
+func GetDesktopWindow() (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getDesktopWindow.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func GetDC(hWnd HWND) HDC {
-	ret, _, _ := syscall.Syscall(getDC.Addr(), 1,
+func GetDC(hWnd HWND) (HDC, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getDC.Addr(), 1,
 		uintptr(hWnd),
 		0,
 		0)
 
-	return HDC(ret)
+	return HDC(ret), err
 }
 
-func GetDlgItem(hDlg HWND, nIDDlgItem int32) HWND {
-	ret, _, _ := syscall.Syscall(getDlgItem.Addr(), 2,
+func GetDlgItem(hDlg HWND, nIDDlgItem int32) (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getDlgItem.Addr(), 2,
 		uintptr(hDlg),
 		uintptr(nIDDlgItem),
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func GetDpiForWindow(hwnd HWND) uint32 {
+func GetDpiForWindow(hwnd HWND) (uint32, syscall.Errno) {
 	if getDpiForWindow.Find() != nil {
-		hdc := GetDC(hwnd)
+		hdc, err := GetDC(hwnd)
+		if hdc == 0 {
+			return 0, err
+		}
 		defer ReleaseDC(hwnd, hdc)
 
-		return uint32(GetDeviceCaps(hdc, LOGPIXELSY))
+		ret, err := GetDeviceCaps(hdc, LOGPIXELSY)
+		return uint32(ret), err
 	}
 
-	ret, _, _ := syscall.Syscall(getDpiForWindow.Addr(), 1,
+	ret, _, err := syscall.Syscall(getDpiForWindow.Addr(), 1,
 		uintptr(hwnd),
 		0,
 		0)
 
-	return uint32(ret)
+	return uint32(ret), err
 }
 
-func GetFocus() HWND {
-	ret, _, _ := syscall.Syscall(getFocus.Addr(), 0,
+func GetFocus() (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getFocus.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func GetForegroundWindow() HWND {
-	ret, _, _ := syscall.Syscall(getForegroundWindow.Addr(), 0,
+func GetForegroundWindow() (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getForegroundWindow.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func GetIconInfo(hicon HICON, piconinfo *ICONINFO) bool {
-	ret, _, _ := syscall.Syscall(getIconInfo.Addr(), 2,
+func GetIconInfo(hicon HICON, piconinfo *ICONINFO) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getIconInfo.Addr(), 2,
 		uintptr(hicon),
 		uintptr(unsafe.Pointer(piconinfo)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetKeyState(nVirtKey int32) int16 {
-	ret, _, _ := syscall.Syscall(getKeyState.Addr(), 1,
+func GetKeyState(nVirtKey int32) (int16, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getKeyState.Addr(), 1,
 		uintptr(nVirtKey),
 		0,
 		0)
 
-	return int16(ret)
+	return int16(ret), err
 }
 
-func GetMenuCheckMarkDimensions() int32 {
-	ret, _, _ := syscall.Syscall(getMenuCheckMarkDimensions.Addr(), 0,
+func GetMenuCheckMarkDimensions() (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getMenuCheckMarkDimensions.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func GetMenuInfo(hmenu HMENU, lpcmi *MENUINFO) bool {
-	ret, _, _ := syscall.Syscall(getMenuInfo.Addr(), 2,
+func GetMenuInfo(hmenu HMENU, lpcmi *MENUINFO) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getMenuInfo.Addr(), 2,
 		uintptr(hmenu),
 		uintptr(unsafe.Pointer(lpcmi)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetMenuItemCount(hMenu HMENU) int32 {
-	ret, _, _ := syscall.Syscall(getMenuItemCount.Addr(), 1,
+func GetMenuItemCount(hMenu HMENU) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getMenuItemCount.Addr(), 1,
 		uintptr(hMenu),
 		0,
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func GetMenuItemID(hMenu HMENU, nPos int32) uint32 {
-	ret, _, _ := syscall.Syscall(getMenuItemID.Addr(), 2,
+func GetMenuItemID(hMenu HMENU, nPos int32) (uint32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getMenuItemID.Addr(), 2,
 		uintptr(hMenu),
 		uintptr(nPos),
 		0)
 
-	return uint32(ret)
+	return uint32(ret), err
 }
 
-func GetMenuItemInfo(hmenu HMENU, item uint32, fByPosition BOOL, lpmii *MENUITEMINFO) bool {
-	ret, _, _ := syscall.Syscall6(getMenuItemInfo.Addr(), 4,
+func GetMenuItemInfo(hmenu HMENU, item uint32, fByPosition BOOL, lpmii *MENUITEMINFO) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(getMenuItemInfo.Addr(), 4,
 		uintptr(hmenu),
 		uintptr(item),
 		uintptr(fByPosition),
@@ -2635,11 +2637,11 @@ func GetMenuItemInfo(hmenu HMENU, item uint32, fByPosition BOOL, lpmii *MENUITEM
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetMessage(msg *MSG, hWnd HWND, msgFilterMin, msgFilterMax uint32) BOOL {
-	ret, _, _ := syscall.Syscall6(getMessage.Addr(), 4,
+func GetMessage(msg *MSG, hWnd HWND, msgFilterMin, msgFilterMax uint32) (BOOL, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(getMessage.Addr(), 4,
 		uintptr(unsafe.Pointer(msg)),
 		uintptr(hWnd),
 		uintptr(msgFilterMin),
@@ -2647,29 +2649,29 @@ func GetMessage(msg *MSG, hWnd HWND, msgFilterMin, msgFilterMax uint32) BOOL {
 		0,
 		0)
 
-	return BOOL(ret)
+	return BOOL(ret), err
 }
 
-func GetMonitorInfo(hMonitor HMONITOR, lpmi *MONITORINFO) bool {
-	ret, _, _ := syscall.Syscall(getMonitorInfo.Addr(), 2,
+func GetMonitorInfo(hMonitor HMONITOR, lpmi *MONITORINFO) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getMonitorInfo.Addr(), 2,
 		uintptr(hMonitor),
 		uintptr(unsafe.Pointer(lpmi)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetParent(hWnd HWND) HWND {
-	ret, _, _ := syscall.Syscall(getParent.Addr(), 1,
+func GetParent(hWnd HWND) (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getParent.Addr(), 1,
 		uintptr(hWnd),
 		0,
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func GetRawInputData(hRawInput HRAWINPUT, uiCommand uint32, pData unsafe.Pointer, pcbSize *uint32, cBSizeHeader uint32) uint32 {
-	ret, _, _ := syscall.Syscall6(getRawInputData.Addr(), 5,
+func GetRawInputData(hRawInput HRAWINPUT, uiCommand uint32, pData unsafe.Pointer, pcbSize *uint32, cBSizeHeader uint32) (uint32, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(getRawInputData.Addr(), 5,
 		uintptr(hRawInput),
 		uintptr(uiCommand),
 		uintptr(pData),
@@ -2677,122 +2679,122 @@ func GetRawInputData(hRawInput HRAWINPUT, uiCommand uint32, pData unsafe.Pointer
 		uintptr(cBSizeHeader),
 		0)
 
-	return uint32(ret)
+	return uint32(ret), err
 }
 
-func GetScrollInfo(hwnd HWND, fnBar int32, lpsi *SCROLLINFO) bool {
-	ret, _, _ := syscall.Syscall(getScrollInfo.Addr(), 3,
+func GetScrollInfo(hwnd HWND, fnBar int32, lpsi *SCROLLINFO) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getScrollInfo.Addr(), 3,
 		uintptr(hwnd),
 		uintptr(fnBar),
 		uintptr(unsafe.Pointer(lpsi)))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetSubMenu(hMenu HMENU, nPos int32) HMENU {
-	ret, _, _ := syscall.Syscall(getSubMenu.Addr(), 2,
+func GetSubMenu(hMenu HMENU, nPos int32) (HMENU, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getSubMenu.Addr(), 2,
 		uintptr(hMenu),
 		uintptr(nPos),
 		0)
 
-	return HMENU(ret)
+	return HMENU(ret), err
 }
 
-func GetSysColor(nIndex int) uint32 {
-	ret, _, _ := syscall.Syscall(getSysColor.Addr(), 1,
+func GetSysColor(nIndex int) (uint32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getSysColor.Addr(), 1,
 		uintptr(nIndex),
 		0,
 		0)
 
-	return uint32(ret)
+	return uint32(ret), err
 }
 
-func GetSysColorBrush(nIndex int) HBRUSH {
-	ret, _, _ := syscall.Syscall(getSysColorBrush.Addr(), 1,
+func GetSysColorBrush(nIndex int) (HBRUSH, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getSysColorBrush.Addr(), 1,
 		uintptr(nIndex),
 		0,
 		0)
 
-	return HBRUSH(ret)
+	return HBRUSH(ret), err
 }
 
-func GetSystemMenu(hWnd HWND, revert bool) HMENU {
-	ret, _, _ := syscall.Syscall(getSystemMenu.Addr(), 2,
+func GetSystemMenu(hWnd HWND, revert bool) (HMENU, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getSystemMenu.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(BoolToBOOL(revert)),
 		0)
-	return HMENU(ret)
+	return HMENU(ret), err
 }
 
-func GetSystemMetrics(nIndex int32) int32 {
-	ret, _, _ := syscall.Syscall(getSystemMetrics.Addr(), 1,
+func GetSystemMetrics(nIndex int32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getSystemMetrics.Addr(), 1,
 		uintptr(nIndex),
 		0,
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func GetSystemMetricsForDpi(nIndex int32, dpi uint32) int32 {
+func GetSystemMetricsForDpi(nIndex int32, dpi uint32) (int32, syscall.Errno) {
 	if getSystemMetricsForDpi.Find() != nil {
 		return GetSystemMetrics(nIndex)
 	}
 
-	ret, _, _ := syscall.Syscall(getSystemMetricsForDpi.Addr(), 2,
+	ret, _, err := syscall.Syscall(getSystemMetricsForDpi.Addr(), 2,
 		uintptr(nIndex),
 		uintptr(dpi),
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func GetWindow(hWnd HWND, uCmd uint32) HWND {
-	ret, _, _ := syscall.Syscall(getWindow.Addr(), 2,
+func GetWindow(hWnd HWND, uCmd uint32) (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getWindow.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(uCmd),
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func GetWindowLong(hWnd HWND, index int32) int32 {
-	ret, _, _ := syscall.Syscall(getWindowLong.Addr(), 2,
+func GetWindowLong(hWnd HWND, index int32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getWindowLong.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(index),
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func GetWindowLongPtr(hWnd HWND, index int32) uintptr {
-	ret, _, _ := syscall.Syscall(getWindowLongPtr.Addr(), 2,
+func GetWindowLongPtr(hWnd HWND, index int32) (uintptr, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getWindowLongPtr.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(index),
 		0)
 
-	return ret
+	return ret, err
 }
 
-func GetWindowPlacement(hWnd HWND, lpwndpl *WINDOWPLACEMENT) bool {
-	ret, _, _ := syscall.Syscall(getWindowPlacement.Addr(), 2,
+func GetWindowPlacement(hWnd HWND, lpwndpl *WINDOWPLACEMENT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getWindowPlacement.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(unsafe.Pointer(lpwndpl)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func GetWindowRect(hWnd HWND, rect *RECT) bool {
-	ret, _, _ := syscall.Syscall(getWindowRect.Addr(), 2,
+func GetWindowRect(hWnd HWND, rect *RECT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(getWindowRect.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(unsafe.Pointer(rect)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func InsertMenuItem(hMenu HMENU, uItem uint32, fByPosition bool, lpmii *MENUITEMINFO) bool {
-	ret, _, _ := syscall.Syscall6(insertMenuItem.Addr(), 4,
+func InsertMenuItem(hMenu HMENU, uItem uint32, fByPosition bool, lpmii *MENUITEMINFO) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(insertMenuItem.Addr(), 4,
 		uintptr(hMenu),
 		uintptr(uItem),
 		uintptr(BoolToBOOL(fByPosition)),
@@ -2800,110 +2802,110 @@ func InsertMenuItem(hMenu HMENU, uItem uint32, fByPosition bool, lpmii *MENUITEM
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func InvalidateRect(hWnd HWND, lpRect *RECT, bErase bool) bool {
-	ret, _, _ := syscall.Syscall(invalidateRect.Addr(), 3,
+func InvalidateRect(hWnd HWND, lpRect *RECT, bErase bool) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(invalidateRect.Addr(), 3,
 		uintptr(hWnd),
 		uintptr(unsafe.Pointer(lpRect)),
 		uintptr(BoolToBOOL(bErase)))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func IsChild(hWndParent, hWnd HWND) bool {
-	ret, _, _ := syscall.Syscall(isChild.Addr(), 2,
+func IsChild(hWndParent, hWnd HWND) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(isChild.Addr(), 2,
 		uintptr(hWndParent),
 		uintptr(hWnd),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func IsClipboardFormatAvailable(format uint32) bool {
-	ret, _, _ := syscall.Syscall(isClipboardFormatAvailable.Addr(), 1,
+func IsClipboardFormatAvailable(format uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(isClipboardFormatAvailable.Addr(), 1,
 		uintptr(format),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func IsDialogMessage(hWnd HWND, msg *MSG) bool {
-	ret, _, _ := syscall.Syscall(isDialogMessage.Addr(), 2,
+func IsDialogMessage(hWnd HWND, msg *MSG) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(isDialogMessage.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(unsafe.Pointer(msg)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func IsIconic(hWnd HWND) bool {
-	ret, _, _ := syscall.Syscall(isIconic.Addr(), 1,
+func IsIconic(hWnd HWND) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(isIconic.Addr(), 1,
 		uintptr(hWnd),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func IsWindowEnabled(hWnd HWND) bool {
-	ret, _, _ := syscall.Syscall(isWindowEnabled.Addr(), 1,
+func IsWindowEnabled(hWnd HWND) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(isWindowEnabled.Addr(), 1,
 		uintptr(hWnd),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func IsWindowVisible(hWnd HWND) bool {
-	ret, _, _ := syscall.Syscall(isWindowVisible.Addr(), 1,
+func IsWindowVisible(hWnd HWND) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(isWindowVisible.Addr(), 1,
 		uintptr(hWnd),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func IsZoomed(hWnd HWND) bool {
-	ret, _, _ := syscall.Syscall(isZoomed.Addr(), 1,
+func IsZoomed(hWnd HWND) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(isZoomed.Addr(), 1,
 		uintptr(hWnd),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func KillTimer(hWnd HWND, uIDEvent uintptr) bool {
-	ret, _, _ := syscall.Syscall(killTimer.Addr(), 2,
+func KillTimer(hWnd HWND, uIDEvent uintptr) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(killTimer.Addr(), 2,
 		uintptr(hWnd),
 		uIDEvent,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func LoadCursor(hInstance HINSTANCE, lpCursorName *uint16) HCURSOR {
-	ret, _, _ := syscall.Syscall(loadCursor.Addr(), 2,
+func LoadCursor(hInstance HINSTANCE, lpCursorName *uint16) (HCURSOR, syscall.Errno) {
+	ret, _, err := syscall.Syscall(loadCursor.Addr(), 2,
 		uintptr(hInstance),
 		uintptr(unsafe.Pointer(lpCursorName)),
 		0)
 
-	return HCURSOR(ret)
+	return HCURSOR(ret), err
 }
 
-func LoadIcon(hInstance HINSTANCE, lpIconName *uint16) HICON {
-	ret, _, _ := syscall.Syscall(loadIcon.Addr(), 2,
+func LoadIcon(hInstance HINSTANCE, lpIconName *uint16) (HICON, syscall.Errno) {
+	ret, _, err := syscall.Syscall(loadIcon.Addr(), 2,
 		uintptr(hInstance),
 		uintptr(unsafe.Pointer(lpIconName)),
 		0)
 
-	return HICON(ret)
+	return HICON(ret), err
 }
 
-func LoadImage(hinst HINSTANCE, lpszName *uint16, uType uint32, cxDesired, cyDesired int32, fuLoad uint32) HANDLE {
-	ret, _, _ := syscall.Syscall6(loadImage.Addr(), 6,
+func LoadImage(hinst HINSTANCE, lpszName *uint16, uType uint32, cxDesired, cyDesired int32, fuLoad uint32) (HANDLE, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(loadImage.Addr(), 6,
 		uintptr(hinst),
 		uintptr(unsafe.Pointer(lpszName)),
 		uintptr(uType),
@@ -2911,20 +2913,20 @@ func LoadImage(hinst HINSTANCE, lpszName *uint16, uType uint32, cxDesired, cyDes
 		uintptr(cyDesired),
 		uintptr(fuLoad))
 
-	return HANDLE(ret)
+	return HANDLE(ret), err
 }
 
-func LoadMenu(hinst HINSTANCE, name *uint16) HMENU {
-	ret, _, _ := syscall.Syscall(loadMenu.Addr(), 2,
+func LoadMenu(hinst HINSTANCE, name *uint16) (HMENU, syscall.Errno) {
+	ret, _, err := syscall.Syscall(loadMenu.Addr(), 2,
 		uintptr(hinst),
 		uintptr(unsafe.Pointer(name)),
 		0)
 
-	return HMENU(ret)
+	return HMENU(ret), err
 }
 
-func LoadString(instRes HINSTANCE, id uint32, buf *uint16, length int32) int32 {
-	ret, _, _ := syscall.Syscall6(loadString.Addr(), 4,
+func LoadString(instRes HINSTANCE, id uint32, buf *uint16, length int32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(loadString.Addr(), 4,
 		uintptr(instRes),
 		uintptr(id),
 		uintptr(unsafe.Pointer(buf)),
@@ -2932,7 +2934,7 @@ func LoadString(instRes HINSTANCE, id uint32, buf *uint16, length int32) int32 {
 		0,
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
 // Plays a waveform sound. uType is the sound to be played. The sounds are set by the user through the Sound control panel application.
@@ -2949,17 +2951,17 @@ func LoadString(instRes HINSTANCE, id uint32, buf *uint16, length int32) int32 {
 //	MB_OK (The sound specified as the Windows Default Beep sound)
 //
 // The function will return true if the function succeeds, false if otherwise.
-func MessageBeep(uType uint32) bool {
-	ret, _, _ := syscall.Syscall(messageBeep.Addr(), 2,
+func MessageBeep(uType uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(messageBeep.Addr(), 2,
 		uintptr(uType),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func MessageBox(hWnd HWND, lpText, lpCaption *uint16, uType uint32) int32 {
-	ret, _, _ := syscall.Syscall6(messageBox.Addr(), 4,
+func MessageBox(hWnd HWND, lpText, lpCaption *uint16, uType uint32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(messageBox.Addr(), 4,
 		uintptr(hWnd),
 		uintptr(unsafe.Pointer(lpText)),
 		uintptr(unsafe.Pointer(lpCaption)),
@@ -2967,20 +2969,20 @@ func MessageBox(hWnd HWND, lpText, lpCaption *uint16, uType uint32) int32 {
 		0,
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func MonitorFromWindow(hwnd HWND, dwFlags uint32) HMONITOR {
-	ret, _, _ := syscall.Syscall(monitorFromWindow.Addr(), 2,
+func MonitorFromWindow(hwnd HWND, dwFlags uint32) (HMONITOR, syscall.Errno) {
+	ret, _, err := syscall.Syscall(monitorFromWindow.Addr(), 2,
 		uintptr(hwnd),
 		uintptr(dwFlags),
 		0)
 
-	return HMONITOR(ret)
+	return HMONITOR(ret), err
 }
 
-func MoveWindow(hWnd HWND, x, y, width, height int32, repaint bool) bool {
-	ret, _, _ := syscall.Syscall6(moveWindow.Addr(), 6,
+func MoveWindow(hWnd HWND, x, y, width, height int32, repaint bool) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(moveWindow.Addr(), 6,
 		uintptr(hWnd),
 		uintptr(x),
 		uintptr(y),
@@ -2988,39 +2990,40 @@ func MoveWindow(hWnd HWND, x, y, width, height int32, repaint bool) bool {
 		uintptr(height),
 		uintptr(BoolToBOOL(repaint)))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func NotifyWinEvent(event uint32, hwnd HWND, idObject, idChild int32) {
-	syscall.Syscall6(notifyWinEvent.Addr(), 4,
+func NotifyWinEvent(event uint32, hwnd HWND, idObject, idChild int32) syscall.Errno {
+	_, _, err := syscall.Syscall6(notifyWinEvent.Addr(), 4,
 		uintptr(event),
 		uintptr(hwnd),
 		uintptr(idObject),
 		uintptr(idChild),
 		0,
 		0)
+	return err
 }
 
-func UnregisterClass(name *uint16) bool {
-	ret, _, _ := syscall.Syscall(unregisterClass.Addr(), 1,
+func UnregisterClass(name *uint16) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(unregisterClass.Addr(), 1,
 		uintptr(unsafe.Pointer(name)),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func OpenClipboard(hWndNewOwner HWND) bool {
-	ret, _, _ := syscall.Syscall(openClipboard.Addr(), 1,
+func OpenClipboard(hWndNewOwner HWND) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(openClipboard.Addr(), 1,
 		uintptr(hWndNewOwner),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func PeekMessage(lpMsg *MSG, hWnd HWND, wMsgFilterMin, wMsgFilterMax, wRemoveMsg uint32) bool {
-	ret, _, _ := syscall.Syscall6(peekMessage.Addr(), 5,
+func PeekMessage(lpMsg *MSG, hWnd HWND, wMsgFilterMin, wMsgFilterMax, wRemoveMsg uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(peekMessage.Addr(), 5,
 		uintptr(unsafe.Pointer(lpMsg)),
 		uintptr(hWnd),
 		uintptr(wMsgFilterMin),
@@ -3028,11 +3031,11 @@ func PeekMessage(lpMsg *MSG, hWnd HWND, wMsgFilterMin, wMsgFilterMax, wRemoveMsg
 		uintptr(wRemoveMsg),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func PostMessage(hWnd HWND, msg uint32, wParam, lParam uintptr) uintptr {
-	ret, _, _ := syscall.Syscall6(postMessage.Addr(), 4,
+func PostMessage(hWnd HWND, msg uint32, wParam, lParam uintptr) (uintptr, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(postMessage.Addr(), 4,
 		uintptr(hWnd),
 		uintptr(msg),
 		wParam,
@@ -3040,14 +3043,15 @@ func PostMessage(hWnd HWND, msg uint32, wParam, lParam uintptr) uintptr {
 		0,
 		0)
 
-	return ret
+	return ret, err
 }
 
-func PostQuitMessage(exitCode int32) {
-	syscall.Syscall(postQuitMessage.Addr(), 1,
+func PostQuitMessage(exitCode int32) syscall.Errno {
+	_, _, err := syscall.Syscall(postQuitMessage.Addr(), 1,
 		uintptr(exitCode),
 		0,
 		0)
+	return err
 }
 
 const (
@@ -3070,8 +3074,8 @@ const (
 	RDW_NOFRAME = 0x0800
 )
 
-func RedrawWindow(hWnd HWND, lprcUpdate *RECT, hrgnUpdate HRGN, flags uint32) bool {
-	ret, _, _ := syscall.Syscall6(redrawWindow.Addr(), 4,
+func RedrawWindow(hWnd HWND, lprcUpdate *RECT, hrgnUpdate HRGN, flags uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(redrawWindow.Addr(), 4,
 		uintptr(hWnd),
 		uintptr(unsafe.Pointer(lprcUpdate)),
 		uintptr(hrgnUpdate),
@@ -3079,74 +3083,74 @@ func RedrawWindow(hWnd HWND, lprcUpdate *RECT, hrgnUpdate HRGN, flags uint32) bo
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func RegisterClassEx(windowClass *WNDCLASSEX) ATOM {
-	ret, _, _ := syscall.Syscall(registerClassEx.Addr(), 1,
+func RegisterClassEx(windowClass *WNDCLASSEX) (ATOM, syscall.Errno) {
+	ret, _, err := syscall.Syscall(registerClassEx.Addr(), 1,
 		uintptr(unsafe.Pointer(windowClass)),
 		0,
 		0)
 
-	return ATOM(ret)
+	return ATOM(ret), err
 }
 
-func RegisterRawInputDevices(pRawInputDevices *RAWINPUTDEVICE, uiNumDevices uint32, cbSize uint32) bool {
-	ret, _, _ := syscall.Syscall(registerRawInputDevices.Addr(), 3,
+func RegisterRawInputDevices(pRawInputDevices *RAWINPUTDEVICE, uiNumDevices uint32, cbSize uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(registerRawInputDevices.Addr(), 3,
 		uintptr(unsafe.Pointer(pRawInputDevices)),
 		uintptr(uiNumDevices),
 		uintptr(cbSize))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func RegisterWindowMessage(lpString *uint16) uint32 {
-	ret, _, _ := syscall.Syscall(registerWindowMessage.Addr(), 1,
+func RegisterWindowMessage(lpString *uint16) (uint32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(registerWindowMessage.Addr(), 1,
 		uintptr(unsafe.Pointer(lpString)),
 		0,
 		0)
 
-	return uint32(ret)
+	return uint32(ret), err
 }
 
-func ReleaseCapture() bool {
-	ret, _, _ := syscall.Syscall(releaseCapture.Addr(), 0,
+func ReleaseCapture() (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(releaseCapture.Addr(), 0,
 		0,
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func ReleaseDC(hWnd HWND, hDC HDC) bool {
-	ret, _, _ := syscall.Syscall(releaseDC.Addr(), 2,
+func ReleaseDC(hWnd HWND, hDC HDC) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(releaseDC.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(hDC),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func RemoveMenu(hMenu HMENU, uPosition, uFlags uint32) bool {
-	ret, _, _ := syscall.Syscall(removeMenu.Addr(), 3,
+func RemoveMenu(hMenu HMENU, uPosition, uFlags uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(removeMenu.Addr(), 3,
 		uintptr(hMenu),
 		uintptr(uPosition),
 		uintptr(uFlags))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func ScreenToClient(hWnd HWND, point *POINT) bool {
-	ret, _, _ := syscall.Syscall(screenToClient.Addr(), 2,
+func ScreenToClient(hWnd HWND, point *POINT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(screenToClient.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(unsafe.Pointer(point)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SendDlgItemMessage(hWnd HWND, id int32, msg uint32, wParam, lParam uintptr) uintptr {
-	ret, _, _ := syscall.Syscall6(sendDlgItemMessage.Addr(), 5,
+func SendDlgItemMessage(hWnd HWND, id int32, msg uint32, wParam, lParam uintptr) (uintptr, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(sendDlgItemMessage.Addr(), 5,
 		uintptr(hWnd),
 		uintptr(id),
 		uintptr(msg),
@@ -3154,21 +3158,21 @@ func SendDlgItemMessage(hWnd HWND, id int32, msg uint32, wParam, lParam uintptr)
 		lParam,
 		0)
 
-	return ret
+	return ret, err
 }
 
 // pInputs expects a unsafe.Pointer to a slice of MOUSE_INPUT or KEYBD_INPUT or HARDWARE_INPUT structs.
-func SendInput(nInputs uint32, pInputs unsafe.Pointer, cbSize int32) uint32 {
-	ret, _, _ := syscall.Syscall(sendInput.Addr(), 3,
+func SendInput(nInputs uint32, pInputs unsafe.Pointer, cbSize int32) (uint32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(sendInput.Addr(), 3,
 		uintptr(nInputs),
 		uintptr(pInputs),
 		uintptr(cbSize))
 
-	return uint32(ret)
+	return uint32(ret), err
 }
 
-func SendMessage(hWnd HWND, msg uint32, wParam, lParam uintptr) uintptr {
-	ret, _, _ := syscall.Syscall6(sendMessage.Addr(), 4,
+func SendMessage(hWnd HWND, msg uint32, wParam, lParam uintptr) (uintptr, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(sendMessage.Addr(), 4,
 		uintptr(hWnd),
 		uintptr(msg),
 		wParam,
@@ -3176,101 +3180,101 @@ func SendMessage(hWnd HWND, msg uint32, wParam, lParam uintptr) uintptr {
 		0,
 		0)
 
-	return ret
+	return ret, err
 }
 
-func SetActiveWindow(hWnd HWND) HWND {
-	ret, _, _ := syscall.Syscall(setActiveWindow.Addr(), 1,
+func SetActiveWindow(hWnd HWND) (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setActiveWindow.Addr(), 1,
 		uintptr(hWnd),
 		0,
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func SetCapture(hWnd HWND) HWND {
-	ret, _, _ := syscall.Syscall(setCapture.Addr(), 1,
+func SetCapture(hWnd HWND) (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setCapture.Addr(), 1,
 		uintptr(hWnd),
 		0,
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func SetClipboardData(uFormat uint32, hMem HANDLE) HANDLE {
-	ret, _, _ := syscall.Syscall(setClipboardData.Addr(), 2,
+func SetClipboardData(uFormat uint32, hMem HANDLE) (HANDLE, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setClipboardData.Addr(), 2,
 		uintptr(uFormat),
 		uintptr(hMem),
 		0)
 
-	return HANDLE(ret)
+	return HANDLE(ret), err
 }
 
-func SetCursor(hCursor HCURSOR) HCURSOR {
-	ret, _, _ := syscall.Syscall(setCursor.Addr(), 1,
+func SetCursor(hCursor HCURSOR) (HCURSOR, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setCursor.Addr(), 1,
 		uintptr(hCursor),
 		0,
 		0)
 
-	return HCURSOR(ret)
+	return HCURSOR(ret), err
 }
 
-func SetCursorPos(X, Y int32) bool {
-	ret, _, _ := syscall.Syscall(setCursorPos.Addr(), 2,
+func SetCursorPos(X, Y int32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setCursorPos.Addr(), 2,
 		uintptr(X),
 		uintptr(Y),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SetFocus(hWnd HWND) HWND {
-	ret, _, _ := syscall.Syscall(setFocus.Addr(), 1,
+func SetFocus(hWnd HWND) (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setFocus.Addr(), 1,
 		uintptr(hWnd),
 		0,
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func SetForegroundWindow(hWnd HWND) bool {
-	ret, _, _ := syscall.Syscall(setForegroundWindow.Addr(), 1,
+func SetForegroundWindow(hWnd HWND) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setForegroundWindow.Addr(), 1,
 		uintptr(hWnd),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SetMenu(hWnd HWND, hMenu HMENU) bool {
-	ret, _, _ := syscall.Syscall(setMenu.Addr(), 2,
+func SetMenu(hWnd HWND, hMenu HMENU) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setMenu.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(hMenu),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SetMenuDefaultItem(hMenu HMENU, uItem uint32, fByPosition bool) bool {
-	ret, _, _ := syscall.Syscall(setMenuDefaultItem.Addr(), 3,
+func SetMenuDefaultItem(hMenu HMENU, uItem uint32, fByPosition bool) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setMenuDefaultItem.Addr(), 3,
 		uintptr(hMenu),
 		uintptr(uItem),
 		uintptr(BoolToBOOL(fByPosition)))
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SetMenuInfo(hmenu HMENU, lpcmi *MENUINFO) bool {
-	ret, _, _ := syscall.Syscall(setMenuInfo.Addr(), 2,
+func SetMenuInfo(hmenu HMENU, lpcmi *MENUINFO) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setMenuInfo.Addr(), 2,
 		uintptr(hmenu),
 		uintptr(unsafe.Pointer(lpcmi)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SetMenuItemBitmaps(hMenu HMENU, uPosition uint32, uFlags uint32, hBitmapUnchecked HBITMAP, hBitmapChecked HBITMAP) bool {
-	ret, _, _ := syscall.Syscall6(setMenuItemBitmaps.Addr(), 5,
+func SetMenuItemBitmaps(hMenu HMENU, uPosition uint32, uFlags uint32, hBitmapUnchecked HBITMAP, hBitmapChecked HBITMAP) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(setMenuItemBitmaps.Addr(), 5,
 		uintptr(hMenu),
 		uintptr(uPosition),
 		uintptr(uFlags),
@@ -3278,11 +3282,11 @@ func SetMenuItemBitmaps(hMenu HMENU, uPosition uint32, uFlags uint32, hBitmapUnc
 		uintptr(hBitmapChecked),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SetMenuItemInfo(hMenu HMENU, uItem uint32, fByPosition bool, lpmii *MENUITEMINFO) bool {
-	ret, _, _ := syscall.Syscall6(setMenuItemInfo.Addr(), 4,
+func SetMenuItemInfo(hMenu HMENU, uItem uint32, fByPosition bool, lpmii *MENUITEMINFO) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(setMenuItemInfo.Addr(), 4,
 		uintptr(hMenu),
 		uintptr(uItem),
 		uintptr(BoolToBOOL(fByPosition)),
@@ -3290,20 +3294,20 @@ func SetMenuItemInfo(hMenu HMENU, uItem uint32, fByPosition bool, lpmii *MENUITE
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SetParent(hWnd HWND, parentHWnd HWND) HWND {
-	ret, _, _ := syscall.Syscall(setParent.Addr(), 2,
+func SetParent(hWnd HWND, parentHWnd HWND) (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setParent.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(parentHWnd),
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func SetRect(lprc *RECT, xLeft, yTop, xRight, yBottom uint32) BOOL {
-	ret, _, _ := syscall.Syscall6(setRect.Addr(), 5,
+func SetRect(lprc *RECT, xLeft, yTop, xRight, yBottom uint32) (BOOL, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(setRect.Addr(), 5,
 		uintptr(unsafe.Pointer(lprc)),
 		uintptr(xLeft),
 		uintptr(yTop),
@@ -3311,11 +3315,11 @@ func SetRect(lprc *RECT, xLeft, yTop, xRight, yBottom uint32) BOOL {
 		uintptr(yBottom),
 		0)
 
-	return BOOL(ret)
+	return BOOL(ret), err
 }
 
-func SetScrollInfo(hwnd HWND, fnBar int32, lpsi *SCROLLINFO, fRedraw bool) int32 {
-	ret, _, _ := syscall.Syscall6(setScrollInfo.Addr(), 4,
+func SetScrollInfo(hwnd HWND, fnBar int32, lpsi *SCROLLINFO, fRedraw bool) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(setScrollInfo.Addr(), 4,
 		uintptr(hwnd),
 		uintptr(fnBar),
 		uintptr(unsafe.Pointer(lpsi)),
@@ -3323,11 +3327,11 @@ func SetScrollInfo(hwnd HWND, fnBar int32, lpsi *SCROLLINFO, fRedraw bool) int32
 		0,
 		0)
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func SetTimer(hWnd HWND, nIDEvent uintptr, uElapse uint32, lpTimerFunc uintptr) uintptr {
-	ret, _, _ := syscall.Syscall6(setTimer.Addr(), 4,
+func SetTimer(hWnd HWND, nIDEvent uintptr, uElapse uint32, lpTimerFunc uintptr) (uintptr, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(setTimer.Addr(), 4,
 		uintptr(hWnd),
 		nIDEvent,
 		uintptr(uElapse),
@@ -3335,12 +3339,12 @@ func SetTimer(hWnd HWND, nIDEvent uintptr, uElapse uint32, lpTimerFunc uintptr) 
 		0,
 		0)
 
-	return ret
+	return ret, err
 }
 
 type WINEVENTPROC func(hWinEventHook HWINEVENTHOOK, event uint32, hwnd HWND, idObject int32, idChild int32, idEventThread uint32, dwmsEventTime uint32) uintptr
 
-func SetWinEventHook(eventMin uint32, eventMax uint32, hmodWinEventProc HMODULE, callbackFunction WINEVENTPROC, idProcess uint32, idThread uint32, dwFlags uint32) (HWINEVENTHOOK, error) {
+func SetWinEventHook(eventMin uint32, eventMax uint32, hmodWinEventProc HMODULE, callbackFunction WINEVENTPROC, idProcess uint32, idThread uint32, dwFlags uint32) (HWINEVENTHOOK, syscall.Errno) {
 	ret, _, err := syscall.Syscall9(setWinEventHook.Addr(), 7,
 		uintptr(eventMin),
 		uintptr(eventMax),
@@ -3351,42 +3355,38 @@ func SetWinEventHook(eventMin uint32, eventMax uint32, hmodWinEventProc HMODULE,
 		uintptr(dwFlags),
 		0, 0)
 
-	if ret == 0 {
-		return 0, err
-	}
-
-	return HWINEVENTHOOK(ret), nil
+	return HWINEVENTHOOK(ret), err
 }
 
-func SetWindowLong(hWnd HWND, index, value int32) int32 {
-	ret, _, _ := syscall.Syscall(setWindowLong.Addr(), 3,
+func SetWindowLong(hWnd HWND, index, value int32) (int32, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setWindowLong.Addr(), 3,
 		uintptr(hWnd),
 		uintptr(index),
 		uintptr(value))
 
-	return int32(ret)
+	return int32(ret), err
 }
 
-func SetWindowLongPtr(hWnd HWND, index int, value uintptr) uintptr {
-	ret, _, _ := syscall.Syscall(setWindowLongPtr.Addr(), 3,
+func SetWindowLongPtr(hWnd HWND, index int, value uintptr) (uintptr, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setWindowLongPtr.Addr(), 3,
 		uintptr(hWnd),
 		uintptr(index),
 		value)
 
-	return ret
+	return ret, err
 }
 
-func SetWindowPlacement(hWnd HWND, lpwndpl *WINDOWPLACEMENT) bool {
-	ret, _, _ := syscall.Syscall(setWindowPlacement.Addr(), 2,
+func SetWindowPlacement(hWnd HWND, lpwndpl *WINDOWPLACEMENT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(setWindowPlacement.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(unsafe.Pointer(lpwndpl)),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SetWindowPos(hWnd, hWndInsertAfter HWND, x, y, width, height int32, flags uint32) bool {
-	ret, _, _ := syscall.Syscall9(setWindowPos.Addr(), 7,
+func SetWindowPos(hWnd, hWndInsertAfter HWND, x, y, width, height int32, flags uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall9(setWindowPos.Addr(), 7,
 		uintptr(hWnd),
 		uintptr(hWndInsertAfter),
 		uintptr(x),
@@ -3397,20 +3397,20 @@ func SetWindowPos(hWnd, hWndInsertAfter HWND, x, y, width, height int32, flags u
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func ShowWindow(hWnd HWND, nCmdShow int32) bool {
-	ret, _, _ := syscall.Syscall(showWindow.Addr(), 2,
+func ShowWindow(hWnd HWND, nCmdShow int32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(showWindow.Addr(), 2,
 		uintptr(hWnd),
 		uintptr(nCmdShow),
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func SystemParametersInfo(uiAction, uiParam uint32, pvParam unsafe.Pointer, fWinIni uint32) bool {
-	ret, _, _ := syscall.Syscall6(systemParametersInfo.Addr(), 4,
+func SystemParametersInfo(uiAction, uiParam uint32, pvParam unsafe.Pointer, fWinIni uint32) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(systemParametersInfo.Addr(), 4,
 		uintptr(uiAction),
 		uintptr(uiParam),
 		uintptr(pvParam),
@@ -3418,20 +3418,20 @@ func SystemParametersInfo(uiAction, uiParam uint32, pvParam unsafe.Pointer, fWin
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func TrackMouseEvent(lpEventTrack *TRACKMOUSEEVENT) bool {
-	ret, _, _ := syscall.Syscall(trackMouseEvent.Addr(), 1,
+func TrackMouseEvent(lpEventTrack *TRACKMOUSEEVENT) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(trackMouseEvent.Addr(), 1,
 		uintptr(unsafe.Pointer(lpEventTrack)),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func TrackPopupMenu(hMenu HMENU, uFlags uint32, x, y int32, nReserved int32, hWnd HWND, prcRect *RECT) uint32 {
-	ret, _, _ := syscall.Syscall9(trackPopupMenu.Addr(), 7,
+func TrackPopupMenu(hMenu HMENU, uFlags uint32, x, y int32, nReserved int32, hWnd HWND, prcRect *RECT) (uint32, syscall.Errno) {
+	ret, _, err := syscall.Syscall9(trackPopupMenu.Addr(), 7,
 		uintptr(hMenu),
 		uintptr(uFlags),
 		uintptr(x),
@@ -3442,11 +3442,11 @@ func TrackPopupMenu(hMenu HMENU, uFlags uint32, x, y int32, nReserved int32, hWn
 		0,
 		0)
 
-	return uint32(ret)
+	return uint32(ret), err
 }
 
-func TrackPopupMenuEx(hMenu HMENU, fuFlags uint32, x, y int32, hWnd HWND, lptpm *TPMPARAMS) BOOL {
-	ret, _, _ := syscall.Syscall6(trackPopupMenuEx.Addr(), 6,
+func TrackPopupMenuEx(hMenu HMENU, fuFlags uint32, x, y int32, hWnd HWND, lptpm *TPMPARAMS) (BOOL, syscall.Errno) {
+	ret, _, err := syscall.Syscall6(trackPopupMenuEx.Addr(), 6,
 		uintptr(hMenu),
 		uintptr(fuFlags),
 		uintptr(x),
@@ -3454,46 +3454,46 @@ func TrackPopupMenuEx(hMenu HMENU, fuFlags uint32, x, y int32, hWnd HWND, lptpm 
 		uintptr(hWnd),
 		uintptr(unsafe.Pointer(lptpm)))
 
-	return BOOL(ret)
+	return BOOL(ret), err
 }
 
-func TranslateMessage(msg *MSG) bool {
-	ret, _, _ := syscall.Syscall(translateMessage.Addr(), 1,
+func TranslateMessage(msg *MSG) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(translateMessage.Addr(), 1,
 		uintptr(unsafe.Pointer(msg)),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func UnhookWinEvent(hWinHookEvent HWINEVENTHOOK) bool {
-	ret, _, _ := syscall.Syscall(unhookWinEvent.Addr(), 1, uintptr(hWinHookEvent), 0, 0)
-	return ret != 0
+func UnhookWinEvent(hWinHookEvent HWINEVENTHOOK) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(unhookWinEvent.Addr(), 1, uintptr(hWinHookEvent), 0, 0)
+	return ret != 0, err
 }
 
-func UpdateWindow(hwnd HWND) bool {
-	ret, _, _ := syscall.Syscall(updateWindow.Addr(), 1,
+func UpdateWindow(hwnd HWND) (bool, syscall.Errno) {
+	ret, _, err := syscall.Syscall(updateWindow.Addr(), 1,
 		uintptr(hwnd),
 		0,
 		0)
 
-	return ret != 0
+	return ret != 0, err
 }
 
-func WindowFromDC(hDC HDC) HWND {
-	ret, _, _ := syscall.Syscall(windowFromDC.Addr(), 1,
+func WindowFromDC(hDC HDC) (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(windowFromDC.Addr(), 1,
 		uintptr(hDC),
 		0,
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
 
-func WindowFromPoint(Point POINT) HWND {
-	ret, _, _ := syscall.Syscall(windowFromPoint.Addr(), 2,
+func WindowFromPoint(Point POINT) (HWND, syscall.Errno) {
+	ret, _, err := syscall.Syscall(windowFromPoint.Addr(), 2,
 		uintptr(Point.X),
 		uintptr(Point.Y),
 		0)
 
-	return HWND(ret)
+	return HWND(ret), err
 }
